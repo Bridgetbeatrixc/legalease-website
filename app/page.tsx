@@ -12,7 +12,6 @@ import {
 } from "@/lib/content";
 import { Faq } from "@/components/Faq";
 import { LeadForm } from "@/components/LeadForm";
-import { Nav } from "@/components/Nav";
 import { PhotoSlot } from "@/components/PhotoSlot";
 import { ServiceMedia } from "@/components/ServiceMedia";
 import { ServiceIcon } from "@/components/ServiceIcon";
@@ -32,17 +31,6 @@ const heroChips = [
 export default function Home() {
   return (
     <SiteStateProvider>
-      <div className="strip">
-        <div className="wrap">
-          <span>
-            <strong>Konsultasi pertama gratis</strong> untuk pendirian PT, CV, dan perizinan usaha
-          </span>
-          <a href="#kontak">Lihat detail</a>
-        </div>
-      </div>
-
-      <Nav />
-
       <main id="top">
         <section className="hero">
           <div className="wrap">
@@ -137,8 +125,8 @@ export default function Home() {
                     <ServiceLink className="btn btn-blue" href="#kontak" lead={s.lead}>
                       Hubungi Kami
                     </ServiceLink>
-                    <a className="btn btn-line" href="#semua-layanan">
-                      Lihat semua layanan
+                    <a className="btn btn-line" href={`/layanan/${s.slug}`}>
+                      Lihat detail
                     </a>
                   </div>
                 </article>
@@ -165,7 +153,7 @@ export default function Home() {
           <div className="wrap">
             <div className="sec-head left">
               <h2 id="allTitle">Semua layanan</h2>
-              <p>Pilih layanan untuk langsung bertanya ke tim kami lewat WhatsApp.</p>
+              <p>Pilih layanan untuk melihat apa yang kami kerjakan dan dokumen yang perlu disiapkan.</p>
             </div>
             <div className="svc-dir">
               {serviceGroups.map((g) => (
@@ -175,13 +163,13 @@ export default function Home() {
                   <ul>
                     {g.items.map((it) => (
                       <li key={it.name}>
-                        <ServiceLink href="#kontak" lead={it.name}>
+                        <a href={`/layanan/${it.slug}`}>
                           <ServiceIcon name={it.icon} />
                           <span>
                             <strong>{it.name}</strong>
                             <span>{it.text}</span>
                           </span>
-                        </ServiceLink>
+                        </a>
                       </li>
                     ))}
                   </ul>
@@ -277,53 +265,6 @@ export default function Home() {
           </div>
         </section>
       </main>
-
-      <footer>
-        <div className="wrap">
-          <div className="foot-grid">
-            <div>
-              <a className="logo" href="#top" aria-label="LegalEase, ke halaman utama">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src="/assets/legalease-logo.png" alt="LegalEase" width={165} height={38} />
-              </a>
-              <p>Konsultan legalitas, perizinan, dan pajak untuk pemilik usaha di Indonesia. Legal Made Easy.</p>
-            </div>
-            <div>
-              <h3>Layanan</h3>
-              <ul>
-                {serviceGroups.map((g) => (
-                  <li key={g.title}>
-                    <a href="#semua-layanan">{g.title}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            <div>
-              <h3>Panduan</h3>
-              <ul>
-                <li><a href="#semua-layanan">Semua layanan</a></li>
-                <li><a href="#cara-kerja">Cara kerja</a></li>
-                <li><a href="#faq">FAQ</a></li>
-              </ul>
-            </div>
-            <div>
-              <h3>Hubungi kami</h3>
-              <ul>
-                <li><a href={WA_URL} target="_blank" rel="noopener">WhatsApp {WA_DISPLAY}</a></li>
-                <li><a href={INSTAGRAM_URL} target="_blank" rel="noopener">Instagram {INSTAGRAM_HANDLE}</a></li>
-              </ul>
-            </div>
-          </div>
-          <div className="foot-base">
-            <span>&copy; 2026 LegalEase</span>
-            <span>Konsultan legal swasta, bukan instansi pemerintah.</span>
-          </div>
-        </div>
-      </footer>
-
-      <a className="wa-float" href={WA_URL} target="_blank" rel="noopener" aria-label="Chat WhatsApp LegalEase">
-        <WhatsAppIcon />
-      </a>
     </SiteStateProvider>
   );
 }

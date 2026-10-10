@@ -3,7 +3,6 @@
 import { useEffect, useRef, useState } from "react";
 import { serviceGroups, WA_URL } from "@/lib/content";
 import { ServiceIcon } from "./ServiceIcon";
-import { ServiceLink } from "./ServiceLink";
 
 export function Nav() {
   const [open, setOpen] = useState(false);
@@ -30,7 +29,7 @@ export function Nav() {
   return (
     <header className="nav">
       <div className="wrap nav-inner">
-        <a className="logo" href="#top" aria-label="LegalEase, ke halaman utama">
+        <a className="logo" href="/" aria-label="LegalEase, ke halaman utama">
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/assets/legalease-logo.png" alt="LegalEase" width={165} height={38} />
         </a>
@@ -62,26 +61,26 @@ export function Nav() {
                   <ul>
                     {g.items.map((it) => (
                       <li key={it.name}>
-                        <ServiceLink href="#kontak" lead={it.name}>
+                        <a href={`/layanan/${it.slug}`}>
                           <ServiceIcon name={it.icon} />
                           {it.name}
-                        </ServiceLink>
+                        </a>
                       </li>
                     ))}
                   </ul>
                 </div>
               ))}
-              <a className="nav-sub-all" href="#semua-layanan">
+              <a className="nav-sub-all" href="/#semua-layanan">
                 Lihat semua layanan
               </a>
             </div>
           </div>
-          <a href="#cara-kerja">Cara kerja</a>
-          <a href="#faq">FAQ</a>
+          <a href="/#cara-kerja">Cara kerja</a>
+          <a href="/#faq">FAQ</a>
           <a className="btn btn-line" href={WA_URL} target="_blank" rel="noopener">
             Hubungi
           </a>
-          <a className="btn btn-blue" href="#kontak">
+          <a className="btn btn-blue" href="/#kontak">
             Konsultasi gratis
           </a>
         </nav>

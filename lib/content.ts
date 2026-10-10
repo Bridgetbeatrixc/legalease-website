@@ -10,6 +10,8 @@ export type ServiceKey = "pendirian" | "perizinan" | "pajak" | "hukum" | "websit
 
 export type Service = {
   key: ServiceKey;
+  // Its page at /layanan/<slug>.
+  slug: string;
   name: string;
   tags: string[];
   summary: string;
@@ -20,6 +22,7 @@ export type Service = {
 export const services: Service[] = [
   {
     key: "pendirian",
+    slug: "pendirian-perusahaan",
     lead: "Pendirian Perusahaan",
     name: "Pendirian Usaha",
     tags: ["PT", "CV", "PT Perorangan", "PT PMA"],
@@ -27,6 +30,7 @@ export const services: Service[] = [
   },
   {
     key: "perizinan",
+    slug: "perizinan-usaha",
     lead: "Perizinan Usaha",
     name: "Perizinan Usaha",
     tags: ["NIB & OSS", "KBLI", "Sertifikat Standar", "PKKPR"],
@@ -34,6 +38,7 @@ export const services: Service[] = [
   },
   {
     key: "pajak",
+    slug: "pajak",
     lead: "Pajak",
     name: "Pajak",
     tags: ["NPWP", "PKP", "SPT Masa", "SPT Tahunan"],
@@ -41,6 +46,7 @@ export const services: Service[] = [
   },
   {
     key: "hukum",
+    slug: "merek-hak-cipta",
     lead: "Merek & Hak Cipta",
     name: "Hukum & Merek",
     tags: ["Merek", "Hak Cipta", "Perjanjian", "Konsultasi"],
@@ -48,6 +54,7 @@ export const services: Service[] = [
   },
   {
     key: "website",
+    slug: "jasa-website",
     lead: "Jasa Website",
     name: "Jasa Website",
     tags: ["Company Profile", "Landing Page", "Toko Online", "Domain & Email"],
@@ -55,6 +62,7 @@ export const services: Service[] = [
   },
   {
     key: "branding",
+    slug: "branding",
     lead: "Branding",
     name: "Branding",
     tags: ["Logo", "Identitas Visual", "Konten Sosmed", "Kemasan"],
@@ -62,40 +70,40 @@ export const services: Service[] = [
   },
 ];
 
-// The full service list, grouped like izin.co.id's directory. Each item opens the contact form with that service selected.
+// The full service list, grouped like izin.co.id's directory. Each item links to its page at /layanan/<slug>.
 export const serviceGroups = [
   {
     title: "Pendirian & Legalitas",
     intro: "Layanan inti untuk legalitas dan pertumbuhan usaha",
     items: [
-      { icon: "building-2", name: "Pendirian Perusahaan", text: "Daftarkan PT, CV, PT Perorangan, atau PT PMA." },
-      { icon: "archive-x", name: "Penutupan Perusahaan", text: "Tutup PT atau CV secara resmi, termasuk likuidasi." },
-      { icon: "map-pin", name: "Virtual Office", text: "Alamat usaha resmi untuk domisili dan surat-menyurat." },
-      { icon: "clipboard-check", name: "Perizinan Usaha", text: "Pengurusan NIB, KBLI, dan izin usaha di OSS." },
-      { icon: "file-pen", name: "Pembuatan & Peninjauan Perjanjian", text: "Perjanjian kerja, investasi, dan kontrak bisnis." },
-      { icon: "folder-open", name: "Dokumen Perusahaan", text: "Perubahan akta, direksi, modal, dan data perseroan." },
+      { slug: "pendirian-perusahaan", icon: "building-2", name: "Pendirian Perusahaan", text: "Daftarkan PT, CV, PT Perorangan, atau PT PMA." },
+      { slug: "penutupan-perusahaan", icon: "archive-x", name: "Penutupan Perusahaan", text: "Tutup PT atau CV secara resmi, termasuk likuidasi." },
+      { slug: "virtual-office", icon: "map-pin", name: "Virtual Office", text: "Alamat usaha resmi untuk domisili dan surat-menyurat." },
+      { slug: "perizinan-usaha", icon: "clipboard-check", name: "Perizinan Usaha", text: "Pengurusan NIB, KBLI, dan izin usaha di OSS." },
+      { slug: "perjanjian", icon: "file-pen", name: "Pembuatan & Peninjauan Perjanjian", text: "Perjanjian kerja, investasi, dan kontrak bisnis." },
+      { slug: "dokumen-perusahaan", icon: "folder-open", name: "Dokumen Perusahaan", text: "Perubahan akta, direksi, modal, dan data perseroan." },
     ],
   },
   {
     title: "Perizinan Khusus",
     intro: "Izin untuk bidang usaha tertentu",
     items: [
-      { icon: "hard-hat", name: "SBUJK", text: "Sertifikat badan usaha untuk kontraktor dan konsultan konstruksi." },
-      { icon: "hospital", name: "Izin Klinik", text: "Izin pendirian dan operasional klinik." },
-      { icon: "shield-check", name: "BPOM", text: "Izin edar pangan olahan, kosmetik, dan obat tradisional." },
-      { icon: "store", name: "PIRT", text: "Izin edar pangan produksi rumah tangga." },
-      { icon: "badge-check", name: "Izin Halal", text: "Sertifikasi halal untuk makanan, minuman, dan kosmetik." },
+      { slug: "sbujk", icon: "hard-hat", name: "SBUJK", text: "Sertifikat badan usaha untuk kontraktor dan konsultan konstruksi." },
+      { slug: "izin-klinik", icon: "hospital", name: "Izin Klinik", text: "Izin pendirian dan operasional klinik." },
+      { slug: "bpom", icon: "shield-check", name: "BPOM", text: "Izin edar pangan olahan, kosmetik, dan obat tradisional." },
+      { slug: "pirt", icon: "store", name: "PIRT", text: "Izin edar pangan produksi rumah tangga." },
+      { slug: "sertifikasi-halal", icon: "badge-check", name: "Izin Halal", text: "Sertifikasi halal untuk makanan, minuman, dan kosmetik." },
     ],
   },
   {
     title: "Pajak, Merek & Digital",
     intro: "Supaya usahamu tertib dan mudah dikenal",
     items: [
-      { icon: "receipt-text", name: "Pajak", text: "NPWP, PKP, serta pelaporan SPT masa dan tahunan." },
-      { icon: "copyright", name: "Merek & Hak Cipta", text: "Pengecekan dan pendaftaran merek ke DJKI." },
-      { icon: "monitor-smartphone", name: "Jasa Website", text: "Company profile, landing page, dan toko online." },
-      { icon: "palette", name: "Branding", text: "Logo, identitas visual, dan desain kemasan." },
-      { icon: "megaphone", name: "Digital Marketing", text: "Konten media sosial dan iklan agar usahamu mudah ditemukan." },
+      { slug: "pajak", icon: "receipt-text", name: "Pajak", text: "NPWP, PKP, serta pelaporan SPT masa dan tahunan." },
+      { slug: "merek-hak-cipta", icon: "copyright", name: "Merek & Hak Cipta", text: "Pengecekan dan pendaftaran merek ke DJKI." },
+      { slug: "jasa-website", icon: "monitor-smartphone", name: "Jasa Website", text: "Company profile, landing page, dan toko online." },
+      { slug: "branding", icon: "palette", name: "Branding", text: "Logo, identitas visual, dan desain kemasan." },
+      { slug: "digital-marketing", icon: "megaphone", name: "Digital Marketing", text: "Konten media sosial dan iklan agar usahamu mudah ditemukan." },
     ],
   },
 ];
@@ -148,7 +156,6 @@ export const steps = [
 export const faqGroups = [
   {
     key: "pendirian",
-    lead: "Pendirian Perusahaan",
     label: "Pendirian",
     items: [
       { q: "Berapa lama proses pendirian PT?", a: "Tergantung kelengkapan dokumen dan jadwal notaris. Setelah dokumenmu lengkap, kami berikan perkiraan waktu per tahap di penawaran tertulis." },
@@ -167,7 +174,6 @@ export const faqGroups = [
   },
   {
     key: "pajak",
-    lead: "Pajak",
     label: "Pajak",
     items: [
       { q: "Kapan usahaku harus menjadi PKP?", a: "Wajib bila omzet dalam setahun melebihi Rp4,8 miliar. Di bawah itu, pengukuhan bisa diajukan sukarela, misalnya karena diminta klien korporat." },

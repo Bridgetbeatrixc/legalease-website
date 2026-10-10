@@ -273,3 +273,46 @@ footer { background: var(--bg); border-top: 1px solid var(--line); margin-top: 9
 .svc-icon { width: 26px; height: 26px; flex: none; color: var(--blue); margin-top: 1px; }
 @media (max-width: 1000px) { .svc-dir { grid-template-columns: repeat(2, 1fr); } }
 @media (max-width: 640px) { .svc-dir { grid-template-columns: 1fr; gap: 32px; } }
+
+/* Service pages (/layanan/<slug>) */
+.sp-hero { padding-top: 24px; }
+.crumbs { display: flex; flex-wrap: wrap; gap: 8px; font-size: 14px; color: var(--ink-2); margin-bottom: 16px; }
+.crumbs a { color: var(--ink-2); text-decoration: none; }
+.crumbs a:hover { color: var(--blue); }
+.crumbs [aria-current] { color: var(--ink); font-weight: 600; }
+.sp-hero-card { background: var(--navy); color: var(--on-navy); border-radius: var(--r-lg); padding: 56px; display: grid; grid-template-columns: 1fr auto; gap: 40px; align-items: center; }
+.sp-hero-card h1 { font-size: clamp(30px, 4vw, 48px); font-weight: 800; line-height: 1.12; letter-spacing: -0.02em; max-width: 18em; }
+.sp-hero-card .lede { margin-top: 18px; color: var(--on-navy-2); font-size: 17px; max-width: 40em; }
+.sp-hero-card .hero-cta { margin-top: 32px; }
+.sp-hero-icon { width: 180px; height: 180px; border-radius: 50%; background: var(--card); display: grid; place-items: center; }
+.sp-hero-icon .svc-icon { width: 84px; height: 84px; margin: 0; }
+.sp-options { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 16px; }
+.sp-options article { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 24px; }
+.sp-options h3 { font-size: 17px; font-weight: 700; }
+.sp-options p { margin-top: 8px; color: var(--ink-2); font-size: 14.5px; }
+.sp-lists { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+.sp-lists > div { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 32px; }
+.sp-lists h2 { font-size: 22px; font-weight: 800; }
+.sp-lists ul { list-style: none; margin: 20px 0 0; padding: 0; display: grid; gap: 12px; }
+.sp-lists li { position: relative; padding-left: 30px; font-size: 15px; }
+.sp-check li::before { content: ""; position: absolute; left: 2px; top: 5px; width: 12px; height: 7px; border-left: 2.5px solid var(--blue); border-bottom: 2.5px solid var(--blue); transform: rotate(-45deg); }
+.sp-docs li::before { content: ""; position: absolute; left: 4px; top: 9px; width: 7px; height: 7px; border-radius: 50%; background: var(--blue); }
+.sp-steps { margin-top: 0; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 28px; }
+.sp-steps li { grid-template-columns: 1fr; gap: 14px; }
+.sp-steps p { color: var(--ink-2); }
+.sp-notes { margin-top: 40px; background: var(--tint); border-radius: 14px; padding: 24px 28px; }
+.sp-notes h3 { font-size: 16px; font-weight: 700; }
+.sp-notes ul { margin: 10px 0 0; padding-left: 20px; display: grid; gap: 8px; color: var(--ink-2); font-size: 15px; }
+.sp-cta { background: var(--blue); color: var(--blue-ink); border-radius: var(--r-lg); padding: 40px 48px; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 24px; }
+.sp-cta h2 { font-size: clamp(22px, 2.6vw, 30px); font-weight: 800; }
+.sp-cta p { margin-top: 8px; opacity: .9; max-width: 38em; }
+.sp-related .svc-group ul { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 4px 32px; }
+.sp-related .svc-group a { margin: 0; }
+.sp > .band:last-child { padding-bottom: 96px; }
+@media (max-width: 860px) {
+  .sp-hero-card { grid-template-columns: 1fr; padding: 32px 24px; }
+  .sp-hero-icon { display: none; }
+  .sp-lists { grid-template-columns: 1fr; }
+  .sp-lists > div { padding: 24px; }
+  .sp-cta { padding: 28px 24px; }
+}
