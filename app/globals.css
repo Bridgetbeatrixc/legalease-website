@@ -69,6 +69,21 @@ img { max-width: 100%; display: block; }
 .nav-links a:hover { color: var(--blue); }
 .nav-links .btn { padding: 11px 18px; font-size: 14px; }
 .nav-links a.btn-blue, .nav-links a.btn-blue:hover { color: var(--blue-ink); }
+/* Services dropdown in the menu */
+.nav-inner { position: relative; }
+.nav-sub { position: static; }
+.nav-sub-btn { display: inline-flex; align-items: center; gap: 4px; background: none; border: 0; padding: 0; font: 500 15px var(--font); color: var(--ink); cursor: pointer; }
+.nav-sub-btn:hover, .nav-sub.open .nav-sub-btn { color: var(--blue); }
+.nav-sub-btn svg { width: 16px; height: 16px; transition: transform .15s ease; }
+.nav-sub.open .nav-sub-btn svg { transform: rotate(180deg); }
+.nav-sub-panel { display: none; position: absolute; top: calc(100% + 1px); right: 0; width: min(780px, 100%); grid-template-columns: repeat(3, 1fr); gap: 8px 24px; padding: 24px; background: var(--card); border: 1px solid var(--line); border-radius: 14px; box-shadow: 0 12px 32px rgba(15, 30, 61, .08); }
+.nav-sub.open .nav-sub-panel { display: grid; }
+.nav-sub-title { font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--blue); margin: 0 0 8px; }
+.nav-sub-panel ul { list-style: none; margin: 0; padding: 0; }
+.nav-sub-panel li a { display: flex; align-items: center; gap: 10px; padding: 8px; margin: 0 -8px; border-radius: var(--r); font-size: 14px; font-weight: 500; }
+.nav-sub-panel li a:hover { background: var(--tint); color: var(--ink); }
+.nav-sub-panel .svc-icon { width: 20px; height: 20px; margin: 0; }
+.nav-links a.nav-sub-all { grid-column: 1 / -1; justify-self: start; margin-top: 8px; font-size: 14px; font-weight: 600; color: var(--blue); }
 .menu-btn { display: none; margin-left: auto; background: none; border: 1.5px solid var(--line); border-radius: var(--r); padding: 10px 12px; font: 600 14px var(--font); color: var(--ink); cursor: pointer; }
 @media (max-width: 900px) {
   .menu-btn { display: inline-block; }
@@ -76,6 +91,11 @@ img { max-width: 100%; display: block; }
   .nav-links.open { display: flex; }
   .nav-links a { padding: 14px 0; border-bottom: 1px solid var(--line); }
   .nav-links .btn { margin-top: 12px; border-bottom: 0; }
+  .nav-links { max-height: calc(100vh - 74px); overflow-y: auto; }
+  .nav-sub-btn { width: 100%; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--line); }
+  .nav-sub-panel { position: static; width: auto; grid-template-columns: 1fr; padding: 8px 0 12px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; box-shadow: none; }
+  .nav-sub-panel li a { border-bottom: 0; padding: 10px 8px; }
+  .nav-links a.nav-sub-all { border-bottom: 0; padding: 8px 0; }
 }
 
 /* Photo slots: show the photo when the file exists, a labelled panel when it doesn't. */

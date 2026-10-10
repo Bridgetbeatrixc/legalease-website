@@ -1,10 +1,32 @@
 "use client";
 
-import { useState } from "react";
-import { WA_URL } from "@/lib/content";
+import { useEffect, useRef, useState } from "react";
+import { serviceGroups, WA_URL } from "@/lib/content";
+import { ServiceIcon } from "./ServiceIcon";
+import { ServiceLink } from "./ServiceLink";
 
 export function Nav() {
   const [open, setOpen] = useState(false);
+  const [subOpen, setSubOpen] = useState(false);
+  const sub = useRef<HTMLDivElement>(null);
+
+  // Close the services dropdown on Escape or a click outside it.
+  useEffect(() => {
+    if (!subOpen) return;
+    const onClick = (e: MouseEvent) => {
+      if (!sub.current?.contains(e.target as Node)) setSubOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setSubOpen(false);
+    };
+    document.addEventListener("click", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("click", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [subOpen]);
+
   return (
     <header className="nav">
       <div className="wrap nav-inner">
@@ -20,11 +42,40 @@ export function Nav() {
           id="navLinks"
           aria-label="Utama"
           onClick={(e) => {
-            if ((e.target as HTMLElement).closest("a")) setOpen(false);
+            if ((e.target as HTMLElement).closest("a")) {
+              setOpen(false);
+              setSubOpen(false);
+            }
           }}
         >
-          <a href="#layanan">Layanan</a>
-          <a href="#semua-layanan">Semua layanan</a>
+          <div className={subOpen ? "nav-sub open" : "nav-sub"} ref={sub}>
+            <button className="nav-sub-btn" aria-expanded={subOpen} aria-controls="navSub" onClick={() => setSubOpen(!subOpen)}>
+              Layanan
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </button>
+            <div className="nav-sub-panel" id="navSub">
+              {serviceGroups.map((g) => (
+                <div key={g.title}>
+                  <p className="nav-sub-title">{g.title}</p>
+                  <ul>
+                    {g.items.map((it) => (
+                      <li key={it.name}>
+                        <ServiceLink href="#kontak" lead={it.name}>
+                          <ServiceIcon name={it.icon} />
+                          {it.name}
+                        </ServiceLink>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+              <a className="nav-sub-all" href="#semua-layanan">
+                Lihat semua layanan
+              </a>
+            </div>
+          </div>
           <a href="#cara-kerja">Cara kerja</a>
           <a href="#faq">FAQ</a>
           <a className="btn btn-line" href={WA_URL} target="_blank" rel="noopener">

@@ -85,7 +85,6 @@ export const serviceGroups = [
       { icon: "shield-check", name: "BPOM", text: "Izin edar pangan olahan, kosmetik, dan obat tradisional." },
       { icon: "store", name: "PIRT", text: "Izin edar pangan produksi rumah tangga." },
       { icon: "badge-check", name: "Izin Halal", text: "Sertifikasi halal untuk makanan, minuman, dan kosmetik." },
-      { icon: "clipboard-plus", name: "Izin SLS", text: "Pengurusan sertifikat SLS untuk usaha yang mewajibkannya." },
     ],
   },
   {
@@ -103,7 +102,7 @@ export const serviceGroups = [
 
 export const facts = [
   { value: "Gratis", label: "Konsultasi pertama" },
-  { value: "17 layanan", label: "Legalitas, perizinan khusus, pajak, digital" },
+  { value: "16 layanan", label: "Legalitas, perizinan khusus, pajak, digital" },
   { value: "Tertulis", label: "Rincian biaya sebelum mulai" },
   { value: "OSS RBA", label: "Sesuai sistem perizinan terbaru" },
   { value: "Online", label: "Dokumen lewat WhatsApp & email" },
