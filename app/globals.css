@@ -87,7 +87,7 @@ img { max-width: 100%; display: block; }
 .nav-sub-panel li a { display: flex; align-items: center; gap: 10px; padding: 8px; margin: 0 -8px; border-radius: var(--r); font-size: 14px; font-weight: 500; }
 .nav-sub-panel li a:hover { background: var(--tint); color: var(--ink); }
 .nav-sub-panel .svc-icon { width: 20px; height: 20px; margin: 0; }
-.nav-links a.nav-sub-all { grid-column: 1 / -1; justify-self: start; margin-top: 4px; font-size: 14px; font-weight: 600; color: var(--blue); }
+.nav-links a.nav-sub-all { grid-column: span 1; justify-self: start; margin-top: 12px; font-size: 14px; font-weight: 600; color: var(--blue); }
 .lang-switch { display: flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; }
 .nav-links .lang-switch a { padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
 .nav-links .lang-switch a:hover { color: var(--blue); }
@@ -362,4 +362,33 @@ footer { background: var(--bg); border-top: 1px solid var(--line); margin-top: 9
   .kbli-head, .kbli-list summary { grid-template-columns: 64px 1fr 28px; gap: 10px; }
   .kbli-list p { margin-left: 0; }
   .kbli-info { grid-template-columns: 1fr; }
+}
+
+/* PPh calculator page */
+.pph { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 32px; }
+.pph-tabs { margin-bottom: 24px; }
+.pph-intro { color: var(--ink-2); max-width: 52em; }
+.pph-grid { margin-top: 24px; display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 32px; align-items: start; }
+.pph-form { display: grid; gap: 18px; }
+.pph-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.pph-hint { font-size: 12.5px; color: var(--ink-2); }
+.pph-check { display: flex; gap: 10px; align-items: center; font-size: 14px; font-weight: 600; cursor: pointer; }
+.pph-check input { width: 18px; height: 18px; padding: 0; accent-color: var(--blue); }
+.pph-result { background: var(--tint); border-radius: 14px; padding: 24px 28px; }
+.pph-result h3 { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--blue); }
+.pph-result h3 + .pph-rows { margin-top: 8px; }
+.pph-rows + h3 { margin-top: 24px; }
+.pph-rows { margin: 0; }
+.pph-rows div { display: flex; justify-content: space-between; gap: 16px; padding: 9px 0; border-bottom: 1px solid var(--tint-2); font-size: 14.5px; }
+.pph-rows div:last-child { border-bottom: 0; }
+.pph-rows dt { color: var(--ink-2); }
+.pph-rows dd { margin: 0; font-weight: 600; text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.pph-rows .pph-strong dt { color: var(--ink); font-weight: 700; }
+.pph-rows .pph-strong dd { color: var(--blue); font-size: 17px; font-weight: 800; }
+.pph-warn { margin-top: 14px; padding: 12px 14px; border-radius: 10px; background: var(--card); border-left: 3px solid var(--blue); font-size: 14px; }
+.pph-note { margin-top: 20px; font-size: 14px; color: var(--ink-2); max-width: 60em; }
+@media (max-width: 860px) {
+  .pph { padding: 20px; }
+  .pph-grid { grid-template-columns: 1fr; }
+  .pph-result { padding: 18px 20px; }
 }

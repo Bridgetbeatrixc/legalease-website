@@ -81,6 +81,9 @@ export function Nav({ lang, path, t, groups }: Props) {
               <a className="nav-sub-all" href={href(lang, "/kbli")}>
                 {t.kbli}
               </a>
+              <a className="nav-sub-all" href={href(lang, "/kalkulator-pph")}>
+                {t.pph}
+              </a>
             </div>
           </div>
           <a href={href(lang, "/#cara-kerja")}>{t.howItWorks}</a>

@@ -1,5 +1,7 @@
 import type { ServiceKey } from "@/lib/content";
 
+export type PphTab = "p21" | "umkm" | "p23" | "p42" | "ppn";
+
 // Every piece of text on the site, in one language. Words between *asterisks* are highlighted.
 // Placeholders like {name} are filled in by the page.
 export type Dict = {
@@ -17,12 +19,14 @@ export type Dict = {
     consult: string;
     language: string;
     kbli: string;
+    pph: string;
   };
   footer: {
     about: string;
     services: string;
     guide: string;
     kbli: string;
+    pph: string;
     contact: string;
     base: string;
     waFloat: string;
@@ -122,6 +126,82 @@ export type Dict = {
     src2025: string;
     src2020: string;
     licence: string;
+    helpTitle: string;
+    helpText: string;
+    helpBtn: string;
+    waText: string;
+  };
+  pph: {
+    navLabel: string;
+    title: string;
+    h1: string;
+    lede: string;
+    disclaimer: string;
+    tabsLabel: string;
+    tabs: Record<PphTab, string>;
+    intro: Record<PphTab, string>;
+    f: {
+      gross: string;
+      grossHint: string;
+      deductions: string;
+      deductionsHint: string;
+      status: string;
+      single: string;
+      married: string;
+      dependents: string;
+      taxpayer: string;
+      turnover: string;
+      turnoverHint: string;
+      before: string;
+      beforeHint: string;
+      kind: string;
+      amount: string;
+      npwp: string;
+      price: string;
+      mode: string;
+      excl: string;
+      incl: string;
+      luxury: string;
+    };
+    out: {
+      annual: string;
+      ter: string;
+      status: string;
+      grossAnnual: string;
+      jobCost: string;
+      otherDeductions: string;
+      ptkp: string;
+      pkp: string;
+      taxAnnual: string;
+      taxMonthly: string;
+      effectiveRate: string;
+      topBracket: string;
+      category: string;
+      terRate: string;
+      terMonthly: string;
+      rate: string;
+      exempt: string;
+      taxable: string;
+      tax: string;
+      net: string;
+      price: string;
+      dpp: string;
+      ppn: string;
+      total: string;
+    };
+    notes: {
+      p21: string;
+      umkm: string;
+      umkmLimit: string;
+      umkmLegacy: string;
+      p23: string;
+      p42: string;
+      ppn: string;
+    };
+    umkmTypes: Record<string, string>;
+    p23Kinds: Record<string, string>;
+    p42Kinds: Record<string, string>;
+    asOf: string;
     helpTitle: string;
     helpText: string;
     helpBtn: string;

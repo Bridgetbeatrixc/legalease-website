@@ -53,6 +53,7 @@ export function SiteFooter({ lang }: { lang: Lang }) {
               <ul>
                 <li><a href={href(lang, "/#semua-layanan")}>{d.home.allTitle}</a></li>
                 <li><a href={href(lang, "/kbli")}>{d.footer.kbli}</a></li>
+                <li><a href={href(lang, "/kalkulator-pph")}>{d.footer.pph}</a></li>
                 <li><a href={href(lang, "/#cara-kerja")}>{d.nav.howItWorks}</a></li>
                 <li><a href={href(lang, "/#faq")}>{d.nav.faq}</a></li>
               </ul>

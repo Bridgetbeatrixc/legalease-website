@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "predev": "node scripts/build-tax-js.mjs",
     "dev": "next dev",
+    "prebuild": "node scripts/build-tax-js.mjs",
     "build": "next build",
     "preview": "npx serve@14.2.4 out"
   },

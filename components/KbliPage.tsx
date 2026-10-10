@@ -1,6 +1,7 @@
 import { WA_NUMBER } from "@/lib/content";
 import { getDict } from "@/lib/dict";
 import { href, type Lang } from "@/lib/i18n";
+import { PageScript } from "@/components/PageScript";
 import { Rich } from "@/components/Rich";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 
@@ -132,7 +133,7 @@ export function KbliPage({ lang }: { lang: Lang }) {
           </div>
         </div>
       </section>
-      <script src="/js/kbli.js" async />
+      <PageScript src="/js/kbli.js" />
     </main>
   );
 }
