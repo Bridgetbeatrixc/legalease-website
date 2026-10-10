@@ -1,10 +1,10 @@
 import {
   agencies,
-  comparison,
   facts,
   INSTAGRAM_HANDLE,
   INSTAGRAM_URL,
   reasons,
+  serviceGroups,
   services,
   steps,
   WA_DISPLAY,
@@ -15,7 +15,7 @@ import { LeadForm } from "@/components/LeadForm";
 import { Nav } from "@/components/Nav";
 import { PhotoSlot } from "@/components/PhotoSlot";
 import { ServiceMedia } from "@/components/ServiceMedia";
-import { ServiceDetail } from "@/components/ServiceDetail";
+import { ServiceIcon } from "@/components/ServiceIcon";
 import { ServiceLink } from "@/components/ServiceLink";
 import { SiteStateProvider } from "@/components/SiteState";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
@@ -57,9 +57,9 @@ export default function Home() {
                 </p>
                 <div className="chips">
                   {heroChips.map((c) => (
-                    <ServiceLink key={c.key} href="#detail" tab={c.key}>
+                    <a key={c.key} href="#semua-layanan">
                       {c.label}
-                    </ServiceLink>
+                    </a>
                   ))}
                 </div>
                 <p className="tagline">Legal Made Easy</p>
@@ -120,7 +120,7 @@ export default function Home() {
             <div className="sec-head">
               <span className="eyebrow">Layanan unggulan kami</span>
               <h2 id="svcTitle">Dari berdirinya usaha sampai dikenal pelanggan</h2>
-              <p>Enam layanan yang kami tangani. Pilih yang kamu butuhkan, atau ceritakan usahamu dan kami bantu menentukan.</p>
+              <p>Enam layanan yang paling sering diminta. Pilih yang kamu butuhkan, atau ceritakan usahamu dan kami bantu menentukan.</p>
             </div>
             <div className="svc-cards">
               {services.map((s) => (
@@ -134,12 +134,12 @@ export default function Home() {
                   </div>
                   <p>{s.summary}</p>
                   <div className="btns">
-                    <ServiceLink className="btn btn-blue" href="#kontak" lead={s.name}>
+                    <ServiceLink className="btn btn-blue" href="#kontak" lead={s.lead}>
                       Hubungi Kami
                     </ServiceLink>
-                    <ServiceLink className="btn btn-line" href="#detail" tab={s.key}>
-                      Lihat detail
-                    </ServiceLink>
+                    <a className="btn btn-line" href="#semua-layanan">
+                      Lihat semua layanan
+                    </a>
                   </div>
                 </article>
               ))}
@@ -161,48 +161,33 @@ export default function Home() {
           </div>
         </section>
 
-        <section className="band" id="detail" aria-labelledby="detailTitle">
+        <section className="band" id="semua-layanan" aria-labelledby="allTitle">
           <div className="wrap">
             <div className="sec-head left">
-              <h2 id="detailTitle">Detail layanan</h2>
+              <h2 id="allTitle">Semua layanan</h2>
+              <p>Pilih layanan untuk langsung bertanya ke tim kami lewat WhatsApp.</p>
             </div>
-            <ServiceDetail />
-          </div>
-        </section>
-
-        <section className="band" id="bentuk-usaha" aria-labelledby="formTitle">
-          <div className="wrap">
-            <div className="sec-head">
-              <h2 id="formTitle">
-                PT, CV, atau <span className="hl">PT Perorangan</span>?
-              </h2>
-              <p>Perbedaan utamanya ada di jumlah pendiri dan sejauh mana harta pribadimu ikut menanggung risiko usaha.</p>
-            </div>
-            <div className="table-wrap">
-              <table>
-                <thead>
-                  <tr>
-                    <th scope="col">Aspek</th>
-                    {comparison.columns.map((c) => (
-                      <th scope="col" key={c}>
-                        {c}
-                      </th>
+            <div className="svc-dir">
+              {serviceGroups.map((g) => (
+                <div className="svc-group" key={g.title}>
+                  <h3>{g.title}</h3>
+                  <p className="svc-group-intro">{g.intro}</p>
+                  <ul>
+                    {g.items.map((it) => (
+                      <li key={it.name}>
+                        <ServiceLink href="#kontak" lead={it.name}>
+                          <ServiceIcon name={it.icon} />
+                          <span>
+                            <strong>{it.name}</strong>
+                            <span>{it.text}</span>
+                          </span>
+                        </ServiceLink>
+                      </li>
                     ))}
-                  </tr>
-                </thead>
-                <tbody>
-                  {comparison.rows.map((r) => (
-                    <tr key={r.aspect}>
-                      <th scope="row">{r.aspect}</th>
-                      {r.values.map((v, i) => (
-                        <td key={i}>{v}</td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </ul>
+                </div>
+              ))}
             </div>
-            <p className="note">Ringkasan umum. Saat konsultasi, kami cocokkan dengan rencana usaha, modal, dan KBLI-mu.</p>
           </div>
         </section>
 
@@ -306,11 +291,9 @@ export default function Home() {
             <div>
               <h3>Layanan</h3>
               <ul>
-                {services.map((s) => (
-                  <li key={s.key}>
-                    <ServiceLink href="#detail" tab={s.key}>
-                      {s.name}
-                    </ServiceLink>
+                {serviceGroups.map((g) => (
+                  <li key={g.title}>
+                    <a href="#semua-layanan">{g.title}</a>
                   </li>
                 ))}
               </ul>
@@ -318,7 +301,7 @@ export default function Home() {
             <div>
               <h3>Panduan</h3>
               <ul>
-                <li><a href="#bentuk-usaha">PT, CV, atau PT Perorangan</a></li>
+                <li><a href="#semua-layanan">Semua layanan</a></li>
                 <li><a href="#cara-kerja">Cara kerja</a></li>
                 <li><a href="#faq">FAQ</a></li>
               </ul>

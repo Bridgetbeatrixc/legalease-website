@@ -24,7 +24,7 @@ export function Nav() {
           }}
         >
           <a href="#layanan">Layanan</a>
-          <a href="#bentuk-usaha">PT atau CV?</a>
+          <a href="#semua-layanan">Semua layanan</a>
           <a href="#cara-kerja">Cara kerja</a>
           <a href="#faq">FAQ</a>
           <a className="btn btn-line" href={WA_URL} target="_blank" rel="noopener">

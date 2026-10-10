@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { services, WA_NUMBER } from "@/lib/content";
+import { serviceGroups, WA_NUMBER } from "@/lib/content";
 import { useSiteState } from "./SiteState";
 
 // Builds a prefilled WhatsApp message; nothing is sent until the visitor taps the link.
@@ -28,20 +28,24 @@ export function LeadForm() {
   }
 
   return (
-    <form noValidate onSubmit={onSubmit}>
+    <form id="leadForm" noValidate onSubmit={onSubmit}>
       <div className="field">
         <label htmlFor="f-name">Nama lengkap</label>
-        <input ref={nameRef} id="f-name" autoComplete="name" placeholder="Contoh: Rina Kartika" value={name} onChange={(e) => setName(e.target.value)} />
+        <input ref={nameRef} id="f-name" name="name" autoComplete="name" placeholder="Contoh: Rina Kartika" value={name} onChange={(e) => setName(e.target.value)} />
       </div>
       <div className="field">
         <label htmlFor="f-wa">Nomor WhatsApp</label>
-        <input ref={waRef} id="f-wa" inputMode="tel" autoComplete="tel" placeholder="08xx xxxx xxxx" value={wa} onChange={(e) => setWa(e.target.value)} />
+        <input ref={waRef} id="f-wa" name="wa" inputMode="tel" autoComplete="tel" placeholder="08xx xxxx xxxx" value={wa} onChange={(e) => setWa(e.target.value)} />
       </div>
       <div className="field">
         <label htmlFor="f-svc">Layanan yang dibutuhkan</label>
-        <select id="f-svc" value={leadService} onChange={(e) => setLeadService(e.target.value)}>
-          {services.map((s) => (
-            <option key={s.key}>{s.name}</option>
+        <select id="f-svc" name="svc" value={leadService} onChange={(e) => setLeadService(e.target.value)}>
+          {serviceGroups.map((g) => (
+            <optgroup key={g.title} label={g.title}>
+              {g.items.map((it) => (
+                <option key={it.name}>{it.name}</option>
+              ))}
+            </optgroup>
           ))}
           <option>Belum tahu, ingin konsultasi</option>
         </select>
@@ -50,6 +54,7 @@ export function LeadForm() {
         <label htmlFor="f-msg">Ceritakan usahamu</label>
         <textarea
           id="f-msg"
+          name="msg"
           placeholder="Contoh: Saya ingin mendirikan PT untuk usaha kopi dengan 2 pendiri di Jakarta Selatan."
           value={msg}
           onChange={(e) => setMsg(e.target.value)}
@@ -58,7 +63,7 @@ export function LeadForm() {
       <button className="btn btn-blue" type="submit">
         Kirim via WhatsApp
       </button>
-      <p className="form-result" role="status" hidden={!result}>
+      <p className="form-result" id="formResult" role="status" hidden={!result}>
         {result?.error}
         {result?.href && (
           <a href={result.href} target="_blank" rel="noopener">

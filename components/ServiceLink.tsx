@@ -1,27 +1,19 @@
 "use client";
 
-import type { ServiceKey } from "@/lib/content";
 import { useSiteState } from "./SiteState";
 
 type Props = {
   href: string;
   className?: string;
-  tab?: ServiceKey;
-  lead?: string;
+  lead: string;
   children: React.ReactNode;
 };
 
-export function ServiceLink({ href, className, tab, lead, children }: Props) {
-  const { setTab, setLeadService } = useSiteState();
+// A link that also preselects `lead` in the contact form.
+export function ServiceLink({ href, className, lead, children }: Props) {
+  const { setLeadService } = useSiteState();
   return (
-    <a
-      href={href}
-      className={className}
-      onClick={() => {
-        if (tab) setTab(tab);
-        if (lead) setLeadService(lead);
-      }}
-    >
+    <a href={href} className={className} data-service={lead} onClick={() => setLeadService(lead)}>
       {children}
     </a>
   );
