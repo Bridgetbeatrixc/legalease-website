@@ -1,0 +1,5 @@
+KBLI 2025 (Peraturan BPS Nomor 7 Tahun 2025)
+Files 01_kategori.json, 02_golongan_pokok.json and 05_kelompok.json are copied unchanged from
+https://github.com/tiomultazem/kbli-2025 (c) 2026 Gilang Wahyu Prasetyo, under the licence in LICENSE.txt.
+That project extracted the data from the BPS publication of 24 December 2025:
+https://www.bps.go.id/id/publication/2025/12/24/a9b2f130776c7bea36008556/klasifikasi-baku-lapangan-usaha-indonesia-kbli-2025-.html

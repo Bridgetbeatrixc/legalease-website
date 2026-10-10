@@ -1,74 +1,60 @@
-import {
-  agencies,
-  facts,
-  INSTAGRAM_HANDLE,
-  INSTAGRAM_URL,
-  reasons,
-  serviceGroups,
-  services,
-  steps,
-  WA_DISPLAY,
-  WA_URL,
-} from "@/lib/content";
+import { INSTAGRAM_HANDLE, INSTAGRAM_URL, WA_DISPLAY, WA_URL } from "@/lib/content";
+import { getDict } from "@/lib/dict";
+import { fill, href, type Lang } from "@/lib/i18n";
 import { Faq } from "@/components/Faq";
 import { LeadForm } from "@/components/LeadForm";
 import { PhotoSlot } from "@/components/PhotoSlot";
+import { Rich } from "@/components/Rich";
 import { ServiceMedia } from "@/components/ServiceMedia";
 import { ServiceIcon } from "@/components/ServiceIcon";
 import { ServiceLink } from "@/components/ServiceLink";
 import { SiteStateProvider } from "@/components/SiteState";
 import { WhatsAppIcon } from "@/components/WhatsAppIcon";
 
-const heroChips = [
-  { key: "pendirian", label: "Pendirian Usaha" },
-  { key: "perizinan", label: "Perizinan & OSS" },
-  { key: "pajak", label: "Pajak" },
-  { key: "hukum", label: "Hukum & Merek" },
-  { key: "website", label: "Website" },
-  { key: "branding", label: "Branding" },
-] as const;
-
-export default function Home() {
+// The home page in any language. Rendered by app/(id)/page.tsx and app/[lang]/page.tsx.
+export function HomePage({ lang }: { lang: Lang }) {
+  const d = getDict(lang);
+  const h = d.home;
+  const items = d.serviceGroups.flatMap((g) => g.items);
+  // The contact form's option for a service card, matched by page slug.
+  const leadFor = (slug: string) => items.find((it) => it.slug === slug)!.name;
   return (
-    <SiteStateProvider>
+    <SiteStateProvider initial={items[0].name}>
       <main id="top">
         <section className="hero">
           <div className="wrap">
             <div className="hero-card on-dark">
               <div className="hero-text">
                 <h1>
-                  Urus <b className="hl">legalitas</b> dan <b className="hl">perizinan</b> bisnismu di satu tempat
+                  <Rich text={h.h1} tag="b" />
                 </h1>
-                <p className="lede">
-                  Pendirian PT dan CV, NIB di OSS, pajak, dan merek, sampai website dan branding usahamu. Tim LegalEase
-                  yang mengerjakan, kamu fokus menjalankan usaha.
-                </p>
+                <p className="lede">{h.lede}</p>
                 <div className="chips">
-                  {heroChips.map((c) => (
-                    <a key={c.key} href="#semua-layanan">
-                      {c.label}
+                  {h.chips.map((c) => (
+                    <a key={c} href="#semua-layanan">
+                      {c}
                     </a>
                   ))}
                 </div>
                 <p className="tagline">Legal Made Easy</p>
                 <div className="hero-cta">
                   <a className="btn btn-ghost-dark" href="#layanan">
-                    Lihat layanan
+                    {h.seeServices}
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
                       <path d="M12 5v14M5 12l7 7 7-7" />
                     </svg>
                   </a>
                   <a className="btn btn-blue" href={WA_URL} target="_blank" rel="noopener">
                     <WhatsAppIcon />
-                    Hubungi Kami
+                    {h.contactUs}
                   </a>
                 </div>
               </div>
-              <PhotoSlot src="/images/hero.jpg" alt="Pemilik usaha meninjau dokumen perusahaan di kantor" label="Foto utama" />
+              <PhotoSlot src="/images/hero.jpg" alt={h.heroAlt} label={h.heroPhoto} />
             </div>
 
             <div className="facts">
-              {facts.map((f) => (
+              {d.facts.map((f) => (
                 <div key={f.value}>
                   <strong>{f.value}</strong>
                   <span>{f.label}</span>
@@ -82,21 +68,18 @@ export default function Home() {
           <div className="wrap">
             <div className="sec-head">
               <h2 id="whyTitle">
-                Mengapa memilih <span className="hl">LegalEase</span>?
+                <Rich text={h.whyTitle} />
               </h2>
-              <p>
-                Mengurus legalitas sering macet di hal kecil: dokumen kurang, kode KBLI salah, atau tidak tahu prosesnya
-                sudah sampai mana. Ini yang kami jaga.
-              </p>
+              <p>{h.whyText}</p>
             </div>
             <div className="why">
-              {reasons.map((r) => (
+              {d.reasons.map((r) => (
                 <article key={r.title}>
                   <div className="body">
                     <h3>{r.title}</h3>
                     <p>{r.text}</p>
                   </div>
-                  <PhotoSlot src={r.image} alt={r.alt} label="Foto" />
+                  <PhotoSlot src={r.image} alt={r.alt} label={h.photo} />
                 </article>
               ))}
             </div>
@@ -106,12 +89,12 @@ export default function Home() {
         <section className="band" id="layanan" aria-labelledby="svcTitle">
           <div className="wrap">
             <div className="sec-head">
-              <span className="eyebrow">Layanan unggulan kami</span>
-              <h2 id="svcTitle">Dari berdirinya usaha sampai dikenal pelanggan</h2>
-              <p>Enam layanan yang paling sering diminta. Pilih yang kamu butuhkan, atau ceritakan usahamu dan kami bantu menentukan.</p>
+              <span className="eyebrow">{h.svcEyebrow}</span>
+              <h2 id="svcTitle">{h.svcTitle}</h2>
+              <p>{h.svcIntro}</p>
             </div>
             <div className="svc-cards">
-              {services.map((s) => (
+              {d.services.map((s) => (
                 <article className="svc-card" key={s.key}>
                   <ServiceMedia service={s.key} alt={s.name} />
                   <h3>{s.name}</h3>
@@ -122,11 +105,11 @@ export default function Home() {
                   </div>
                   <p>{s.summary}</p>
                   <div className="btns">
-                    <ServiceLink className="btn btn-blue" href="#kontak" lead={s.lead}>
-                      Hubungi Kami
+                    <ServiceLink className="btn btn-blue" href="#kontak" lead={leadFor(s.slug)}>
+                      {h.contactUs}
                     </ServiceLink>
-                    <a className="btn btn-line" href={`/layanan/${s.slug}`}>
-                      Lihat detail
+                    <a className="btn btn-line" href={href(lang, `/layanan/${s.slug}`)}>
+                      {h.detail}
                     </a>
                   </div>
                 </article>
@@ -137,9 +120,9 @@ export default function Home() {
 
         <section className="band partners" aria-labelledby="partnerTitle">
           <div className="wrap">
-            <h2 id="partnerTitle">Instansi tempat kami mengurus dokumenmu</h2>
+            <h2 id="partnerTitle">{h.partnersTitle}</h2>
             <ul>
-              {agencies.map((a) => (
+              {d.agencies.map((a) => (
                 <li key={a.name}>
                   {a.name}
                   <small>{a.role}</small>
@@ -152,18 +135,18 @@ export default function Home() {
         <section className="band" id="semua-layanan" aria-labelledby="allTitle">
           <div className="wrap">
             <div className="sec-head left">
-              <h2 id="allTitle">Semua layanan</h2>
-              <p>Pilih layanan untuk melihat apa yang kami kerjakan dan dokumen yang perlu disiapkan.</p>
+              <h2 id="allTitle">{h.allTitle}</h2>
+              <p>{h.allText}</p>
             </div>
             <div className="svc-dir">
-              {serviceGroups.map((g) => (
+              {d.serviceGroups.map((g) => (
                 <div className="svc-group" key={g.title}>
                   <h3>{g.title}</h3>
                   <p className="svc-group-intro">{g.intro}</p>
                   <ul>
                     {g.items.map((it) => (
                       <li key={it.name}>
-                        <a href={`/layanan/${it.slug}`}>
+                        <a href={href(lang, `/layanan/${it.slug}`)}>
                           <ServiceIcon name={it.icon} />
                           <span>
                             <strong>{it.name}</strong>
@@ -183,11 +166,11 @@ export default function Home() {
           <div className="wrap process-grid">
             <div>
               <h2 id="stepsTitle">
-                Empat langkah sampai <span className="hl">dokumen di tanganmu</span>
+                <Rich text={h.stepsTitle} />
               </h2>
-              <p className="lede">Kamu cukup kirim data. Sisanya kami urus dan kabari di setiap tahap.</p>
+              <p className="lede">{h.stepsLede}</p>
               <ol className="steps">
-                {steps.map((s) => (
+                {d.steps.map((s) => (
                   <li key={s.title}>
                     <div>
                       <h3>{s.title}</h3>
@@ -197,7 +180,7 @@ export default function Home() {
                 ))}
               </ol>
             </div>
-            <PhotoSlot src="/images/proses.jpg" alt="Tim LegalEase menyerahkan dokumen perusahaan kepada klien" label="Foto" />
+            <PhotoSlot src="/images/proses.jpg" alt={h.processAlt} label={h.photo} />
           </div>
         </section>
 
@@ -205,10 +188,10 @@ export default function Home() {
           <div className="wrap">
             <div className="sec-head">
               <h2 id="faqTitle">
-                Apa yang sering <span className="hl">ditanyakan</span> pemilik usaha?
+                <Rich text={h.faqTitle} />
               </h2>
             </div>
-            <Faq />
+            <Faq groups={d.faqGroups} label={h.faqTabs} />
           </div>
         </section>
 
@@ -217,10 +200,10 @@ export default function Home() {
             <div className="cta on-dark">
               <div className="cta-side">
                 <h2 id="contactTitle">
-                  Siap mengurus <b className="hl">legalitas bisnismu</b> sekarang?
+                  <Rich text={h.contactTitle} tag="b" />
                 </h2>
-                <p className="lede">Isi formulir ini dan pesanmu akan terbuka di WhatsApp. Konsultasi pertama gratis.</p>
-                <PhotoSlot src="/images/konsultasi.jpg" alt="Konsultan LegalEase berdiskusi dengan dua pemilik usaha" label="Foto" />
+                <p className="lede">{h.contactLede}</p>
+                <PhotoSlot src="/images/konsultasi.jpg" alt={h.contactAlt} label={h.photo} />
                 <div className="cta-contacts">
                   <span>
                     WhatsApp{" "}
@@ -236,7 +219,7 @@ export default function Home() {
                   </span>
                 </div>
               </div>
-              <LeadForm />
+              <LeadForm t={d.form} groups={d.serviceGroups} />
             </div>
           </div>
         </section>
@@ -244,21 +227,21 @@ export default function Home() {
         <section className="band" aria-labelledby="promoTitle">
           <div className="wrap">
             <div className="sec-head">
-              <h2 id="promoTitle">Jadilah yang pertama tahu promo LegalEase</h2>
+              <h2 id="promoTitle">{h.promoTitle}</h2>
             </div>
             <div className="promos">
               <div className="promo promo-ig">
-                <h3>Ikuti kami di Instagram</h3>
-                <p>Tips legalitas usaha, perubahan aturan OSS, dan promo layanan setiap minggu.</p>
+                <h3>{h.igTitle}</h3>
+                <p>{h.igText}</p>
                 <a className="btn btn-blue" href={INSTAGRAM_URL} target="_blank" rel="noopener">
-                  Buka {INSTAGRAM_HANDLE}
+                  {fill(h.igBtn, { handle: INSTAGRAM_HANDLE })}
                 </a>
               </div>
               <div className="promo promo-wa">
-                <h3>Tanya langsung lewat WhatsApp</h3>
-                <p>Kirim pertanyaanmu ke tim kami. Kami balas di hari kerja.</p>
+                <h3>{h.waTitle}</h3>
+                <p>{h.waText}</p>
                 <a className="btn btn-white" href={WA_URL} target="_blank" rel="noopener">
-                  Chat {WA_DISPLAY}
+                  {fill(h.waBtn, { number: WA_DISPLAY })}
                 </a>
               </div>
             </div>

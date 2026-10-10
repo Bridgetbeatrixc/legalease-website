@@ -1,24 +1,24 @@
 "use client";
 
 import { useState } from "react";
-import { faqGroups } from "@/lib/content";
+import type { Dict } from "@/lib/dict";
 import { TabList } from "./Tabs";
 
-export function Faq() {
-  const [group, setGroup] = useState(faqGroups[0].key);
+export function Faq({ groups, label }: { groups: Dict["faqGroups"]; label: string }) {
+  const [group, setGroup] = useState(groups[0].key);
   return (
     <>
       <TabList
-        tabs={faqGroups.map((g) => ({ key: g.key, label: g.label }))}
+        tabs={groups.map((g) => ({ key: g.key, label: g.label }))}
         selected={group}
         onSelect={setGroup}
         idPrefix="ftab-"
         panelPrefix="fpanel-"
         className="faq-tabs"
         tabClassName="faq-tab"
-        label="Topik pertanyaan"
+        label={label}
       />
-      {faqGroups.map((g) => (
+      {groups.map((g) => (
         <div
           key={g.key}
           className="faq-panel"

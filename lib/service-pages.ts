@@ -2,6 +2,10 @@
 // service pages only as a guide to what each page should cover. No prices or fixed timelines:
 // those go in the written quote after the free consultation.
 
+import type { Lang } from "./i18n";
+import { servicePagesEn } from "./service-pages.en";
+import { servicePagesZh } from "./service-pages.zh";
+
 export type ServicePage = {
   slug: string;
   name: string;
@@ -595,6 +599,8 @@ export const servicePages: ServicePage[] = [
   },
 ];
 
-export function getServicePage(slug: string) {
-  return servicePages.find((p) => p.slug === slug);
+const byLang: Record<Lang, ServicePage[]> = { id: servicePages, en: servicePagesEn, zh: servicePagesZh };
+
+export function getServicePage(lang: Lang, slug: string) {
+  return byLang[lang].find((p) => p.slug === slug);
 }

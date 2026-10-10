@@ -21,12 +21,16 @@
   --plate: #FFFFFF;
   --focus: #1766B2;
   --font: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  --font-zh: "Montserrat", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
   --r: 8px;
   --r-lg: 20px;
   --wrap: 1180px;
 }
 /* Always light: Bridget wants white as the main colour, even when the viewer's device is in dark mode. */
 :root, :root[data-theme="dark"] { color-scheme: light; }
+:root:lang(zh) { --font: var(--font-zh); }
+/* Chinese has no spaces, so only break headings at punctuation. */
+:lang(zh) h1 { word-break: keep-all; }
 
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
@@ -83,7 +87,11 @@ img { max-width: 100%; display: block; }
 .nav-sub-panel li a { display: flex; align-items: center; gap: 10px; padding: 8px; margin: 0 -8px; border-radius: var(--r); font-size: 14px; font-weight: 500; }
 .nav-sub-panel li a:hover { background: var(--tint); color: var(--ink); }
 .nav-sub-panel .svc-icon { width: 20px; height: 20px; margin: 0; }
-.nav-links a.nav-sub-all { grid-column: 1 / -1; justify-self: start; margin-top: 8px; font-size: 14px; font-weight: 600; color: var(--blue); }
+.nav-links a.nav-sub-all { grid-column: 1 / -1; justify-self: start; margin-top: 4px; font-size: 14px; font-weight: 600; color: var(--blue); }
+.lang-switch { display: flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; }
+.nav-links .lang-switch a { padding: 4px 10px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.nav-links .lang-switch a:hover { color: var(--blue); }
+.nav-links .lang-switch a[aria-current] { background: var(--blue); color: var(--blue-ink); }
 .menu-btn { display: none; margin-left: auto; background: none; border: 1.5px solid var(--line); border-radius: var(--r); padding: 10px 12px; font: 600 14px var(--font); color: var(--ink); cursor: pointer; }
 @media (max-width: 900px) {
   .menu-btn { display: inline-block; }
@@ -96,6 +104,8 @@ img { max-width: 100%; display: block; }
   .nav-sub-panel { position: static; width: auto; grid-template-columns: 1fr; padding: 8px 0 12px; border: 0; border-bottom: 1px solid var(--line); border-radius: 0; box-shadow: none; }
   .nav-sub-panel li a { border-bottom: 0; padding: 10px 8px; }
   .nav-links a.nav-sub-all { border-bottom: 0; padding: 8px 0; }
+  .lang-switch { align-self: flex-start; margin-top: 14px; }
+  .nav-links .lang-switch a { padding: 6px 14px; border-bottom: 0; }
 }
 
 /* Photo slots: show the photo when the file exists, a labelled panel when it doesn't. */
@@ -315,4 +325,41 @@ footer { background: var(--bg); border-top: 1px solid var(--line); margin-top: 9
   .sp-lists { grid-template-columns: 1fr; }
   .sp-lists > div { padding: 24px; }
   .sp-cta { padding: 28px 24px; }
+}
+
+/* KBLI lookup page */
+.kbli-hero { grid-template-columns: 1fr; }
+.kbli-disclaimer { margin-top: 16px; font-size: 13.5px; color: var(--on-navy-2); max-width: 46em; }
+.kbli { background: var(--card); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 32px; }
+.kbli-top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px; }
+.kbli-top h2 { font-size: 24px; font-weight: 800; }
+.kbli-version { display: flex; gap: 2px; padding: 3px; border: 1px solid var(--line); border-radius: 999px; }
+.kbli-version button { font: 600 14px var(--font); color: var(--ink-2); background: none; border: 0; border-radius: 999px; padding: 8px 16px; cursor: pointer; }
+.kbli-version button[aria-pressed="true"] { background: var(--blue); color: var(--blue-ink); }
+.kbli-note { margin-top: 12px; font-size: 14px; color: var(--ink-2); }
+.kbli-controls { margin-top: 20px; display: grid; grid-template-columns: 2fr 1fr; gap: 16px; }
+.kbli-count { margin-top: 20px; font-size: 14px; font-weight: 600; color: var(--ink-2); }
+.kbli-head, .kbli-list summary { display: grid; grid-template-columns: 84px 1fr 64px; gap: 16px; align-items: baseline; }
+.kbli-head { margin-top: 12px; padding: 10px 0; border-bottom: 2px solid var(--line); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .04em; color: var(--ink-2); }
+.kbli-head span:last-child, .kbli-sec { text-align: center; }
+.kbli-list { list-style: none; margin: 0; padding: 0; }
+.kbli-list li { border-bottom: 1px solid var(--line); }
+.kbli-list summary { list-style: none; cursor: pointer; padding: 14px 0; }
+.kbli-list summary::-webkit-details-marker { display: none; }
+.kbli-list summary:hover .kbli-title { color: var(--blue); }
+.kbli-code { font-weight: 700; color: var(--blue); font-variant-numeric: tabular-nums; }
+.kbli-title { font-weight: 600; font-size: 15px; overflow-wrap: anywhere; }
+.kbli-sec { font-size: 13px; font-weight: 700; color: var(--ink-2); }
+.kbli-list p { margin: 0 0 16px 100px; font-size: 14.5px; color: var(--ink-2); }
+.kbli-more { margin-top: 20px; }
+.kbli-src { margin-top: 20px; font-size: 13px; color: var(--ink-2); }
+.kbli-src a { color: var(--blue); }
+.kbli-info { grid-template-columns: repeat(3, 1fr); }
+.kbli-info p { margin-top: 14px; font-size: 15px; color: var(--ink-2); }
+@media (max-width: 860px) {
+  .kbli { padding: 20px; }
+  .kbli-controls { grid-template-columns: 1fr; }
+  .kbli-head, .kbli-list summary { grid-template-columns: 64px 1fr 28px; gap: 10px; }
+  .kbli-list p { margin-left: 0; }
+  .kbli-info { grid-template-columns: 1fr; }
 }

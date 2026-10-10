@@ -10,8 +10,8 @@ type SiteState = {
 
 const Ctx = createContext<SiteState | null>(null);
 
-export function SiteStateProvider({ children }: { children: React.ReactNode }) {
-  const [leadService, setLeadService] = useState("Pendirian Perusahaan");
+export function SiteStateProvider({ initial, children }: { initial: string; children: React.ReactNode }) {
+  const [leadService, setLeadService] = useState(initial);
   return <Ctx.Provider value={{ leadService, setLeadService }}>{children}</Ctx.Provider>;
 }
 
