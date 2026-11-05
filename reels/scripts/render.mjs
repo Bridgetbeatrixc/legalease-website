@@ -13,7 +13,8 @@ for (const c of comps.filter((c) => !c.id.startsWith("storyboard-"))) {
     serveUrl,
     composition: c,
     codec: "h264",
-    output,
+    outputLocation: output,
+    concurrency: "100%",
     browserExecutable,
     onProgress: ({ progress }) => process.stdout.write(`\r${c.id} ${Math.round(progress * 100)}%`),
   });
