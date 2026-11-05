@@ -1,5 +1,5 @@
 import type React from "react";
-import type { Setting } from "./components/Stage";
+import type { Cam, Setting } from "./components/Stage";
 
 export type SceneDef = {
   /** File name of the dub for this scene: public/audio/<video id>/<scene id>.mp3 */
@@ -8,6 +8,8 @@ export type SceneDef = {
   text: string;
   kicker?: { pill?: string; text?: string; pillColor?: string };
   setting?: Setting;
+  /** Camera move and look for this scene. Times are fractions of the scene (0..1). */
+  camera?: Cam;
   Visual: React.FC<{ dur: number }>;
 };
 

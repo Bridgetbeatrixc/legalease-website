@@ -19,7 +19,21 @@ export const EndCard: React.FC<{ person?: Partial<PersonProps>; line?: string; c
   return (
     <>
       <Svg>
-        <Person x={800} y={1300} scale={0.78} pose="wave" mood="happy" {...person} pants={C.cobalt} />
+        <Person
+          x={800}
+          y={1300}
+          scale={0.78}
+          mood="happy"
+          walk={{ from: 1300, start: 2, dur: 22 }}
+          poses={[
+            [0, "idle"],
+            [28, "armsUp"],
+            [52, "wave"],
+          ]}
+          jumps={[28, 44]}
+          {...person}
+          pants={C.cobalt}
+        />
       </Svg>
       <div style={{ position: "absolute", top: 300, left: 70, width: 600, fontFamily: FONT }}>
         <div

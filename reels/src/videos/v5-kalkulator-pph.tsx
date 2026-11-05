@@ -1,6 +1,6 @@
 import React from "react";
 import { interpolate, useCurrentFrame } from "remotion";
-import { pop, ramp, wave } from "../components/anim";
+import { at, pop, ramp, wave } from "../components/anim";
 import { EndCard } from "../components/EndCard";
 import { Person, PersonProps } from "../components/Person";
 import { At, Box, Bubble, Marks, Phone, T } from "../components/Props";
@@ -23,7 +23,23 @@ const Hook: React.FC<{ dur: number }> = ({ dur }) => {
           {rupiah(n)}?
         </T>
       </At>
-      <Person x={540} y={1300} scale={0.8} {...LINA} mood="shock" pose="handsHead" />
+      <Person
+        x={540}
+        y={1300}
+        scale={0.8}
+        {...LINA}
+        moods={[
+          [0, "worried"],
+          [at(dur, 0.6), "shock"],
+        ]}
+        poses={[
+          [0, "phone"],
+          [at(dur, 0.6), "handsHead"],
+        ]}
+        holding={<At x={0} y={-20} s={0.18}><Phone /></At>}
+        jumps={[at(dur, 0.6)]}
+        flinch={[at(dur, 0.6)]}
+      />
     </Svg>
   );
 };
@@ -37,7 +53,21 @@ const Intro: React.FC<{ dur: number }> = ({ dur }) => {
           <Box label="PAKET" />
         </At>
       ))}
-      <Person x={300} y={1300} scale={0.86} {...LINA} mood="happy" pose="phone" holding={<At x={0} y={-20} s={0.18}><Phone /></At>} />
+      <Person
+        x={300}
+        y={1300}
+        scale={0.86}
+        {...LINA}
+        mood="happy"
+        walk={{ from: -220, start: 0, dur: 20 }}
+        poses={[
+          [0, "phone"],
+          [at(dur, 0.5), "armsUp"],
+          [at(dur, 0.7), "phone"],
+        ]}
+        jumps={[at(dur, 0.5)]}
+        holding={<At x={0} y={-20} s={0.18}><Phone /></At>}
+      />
       <At x={720} y={560} s={pop(f, 10)}>
         <Bubble text="Omzet Rp60 juta/bulan" w={560} />
       </At>
@@ -48,7 +78,7 @@ const Intro: React.FC<{ dur: number }> = ({ dur }) => {
   );
 };
 
-const Conflict: React.FC<{ dur: number }> = () => {
+const Conflict: React.FC<{ dur: number }> = ({ dur }) => {
   const f = useCurrentFrame();
   const chips = ["0,5%?", "PPh final?", "Rumusnya?"];
   return (
@@ -61,7 +91,21 @@ const Conflict: React.FC<{ dur: number }> = () => {
           </T>
         </At>
       ))}
-      <Person x={540} y={1300} scale={0.8} {...LINA} mood="think" pose="shrug" />
+      <Person
+        x={540}
+        y={1300}
+        scale={0.8}
+        {...LINA}
+        moods={[
+          [0, "think"],
+          [at(dur, 0.6), "sad"],
+        ]}
+        poses={[
+          [0, "chin"],
+          [at(dur, 0.35), "shrug"],
+          [at(dur, 0.6), "slump"],
+        ]}
+      />
       <At x={540} y={700}>
         <Marks kind="?" />
       </At>
@@ -118,24 +162,28 @@ export const V5: VideoDef = {
       text: "Lina takut membuka urusan pajaknya. Dia kira tagihannya *puluhan juta.*",
       kicker: { pill: "CERITA LINA", text: "Pajaknya berapa, ya?" },
       setting: "room",
+      camera: { zoom: [1.0, 1.14], focus: [540, 700], punch: [0.6], shake: [0.6], grade: "tense" },
       Visual: Hook,
     },
     {
       id: "02-tokoh",
       text: "Lina jualan baju online. Omzetnya sekitar 60 juta sebulan, atau *720 juta setahun.*",
       setting: "room",
+      camera: { zoom: [1.12, 1.0], pan: [-30, 0], focus: [500, 900], grade: "warm" },
       Visual: Intro,
     },
     {
       id: "03-konflik",
       text: "Dia pernah dengar UMKM kena pajak 0,5 persen, tapi tidak tahu cara menghitungnya. Jadi dia *terus menunda.*",
       setting: "office",
+      camera: { zoom: [1.0, 1.1], focus: [540, 900], grade: "cool" },
       Visual: Conflict,
     },
     {
       id: "04-pelajaran",
       text: "Untuk pengusaha orang pribadi, *500 juta pertama* omzet setahun tidak kena pajak. Sisanya 220 juta dikali 0,5 persen. Pajaknya cuma *1,1 juta rupiah* setahun.",
       setting: "plain",
+      camera: { zoom: [1.04, 1.0], tilt: [30, 0], focus: [540, 800], punch: [0.62], grade: "bright" },
       Visual: Calc,
     },
     {

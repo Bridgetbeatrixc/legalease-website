@@ -1,6 +1,6 @@
 import React from "react";
 import { random, useCurrentFrame } from "remotion";
-import { pop, ramp, wave } from "../components/anim";
+import { at, pop, ramp, wave } from "../components/anim";
 import { EndCard } from "../components/EndCard";
 import { Person, PersonProps } from "../components/Person";
 import { At, Marks, Phone, T, Washer } from "../components/Props";
@@ -29,17 +29,31 @@ const Digits: React.FC<{ y: number; reveal?: string; t?: number }> = ({ y, revea
   );
 };
 
-const Hook: React.FC<{ dur: number }> = () => (
+const Hook: React.FC<{ dur: number }> = ({ dur }) => (
   <Svg>
     <Digits y={620} />
-    <Person x={540} y={1300} scale={0.72} {...MAYA} mood="think" pose="shrug" />
+    <Person
+      x={540}
+      y={1300}
+      scale={0.72}
+      {...MAYA}
+      moods={[
+        [0, "think"],
+        [at(dur, 0.55), "worried"],
+      ]}
+      poses={[
+        [0, "chin"],
+        [at(dur, 0.55), "shrug"],
+      ]}
+      jumps={[at(dur, 0.55)]}
+    />
     <At x={540} y={780}>
       <Marks kind="?" />
     </At>
   </Svg>
 );
 
-const Intro: React.FC<{ dur: number }> = () => {
+const Intro: React.FC<{ dur: number }> = ({ dur }) => {
   const f = useCurrentFrame();
   return (
     <Svg>
@@ -54,12 +68,25 @@ const Intro: React.FC<{ dur: number }> = () => {
           Dekat kampus
         </T>
       </At>
-      <Person x={250} y={1300} scale={0.86} {...MAYA} mood="happy" pose="wave" />
+      <Person
+        x={250}
+        y={1300}
+        scale={0.86}
+        {...MAYA}
+        mood="happy"
+        walk={{ from: -220, start: 0, dur: 22 }}
+        poses={[
+          [0, "wave"],
+          [at(dur, 0.5), "present"],
+          [at(dur, 0.8), "armsUp"],
+        ]}
+        jumps={[at(dur, 0.8)]}
+      />
     </Svg>
   );
 };
 
-const Conflict: React.FC<{ dur: number }> = () => {
+const Conflict: React.FC<{ dur: number }> = ({ dur }) => {
   const f = useCurrentFrame();
   return (
     <Svg>
@@ -77,7 +104,22 @@ const Conflict: React.FC<{ dur: number }> = () => {
           </g>
         );
       })}
-      <Person x={540} y={1300} scale={0.8} {...MAYA} mood="worried" pose="handsHead" />
+      <Person
+        x={540}
+        y={1300}
+        scale={0.8}
+        {...MAYA}
+        moods={[
+          [0, "think"],
+          [at(dur, 0.3), "shock"],
+          [at(dur, 0.6), "worried"],
+        ]}
+        poses={[
+          [0, "phone"],
+          [at(dur, 0.3), "handsHead"],
+        ]}
+        flinch={[at(dur, 0.3)]}
+      />
       <At x={540} y={500} s={pop(f, 8)}>
         <rect x={-250} y={-70} width={500} height={140} rx={70} fill={C.navy} />
         <T x={0} y={24} size={64} weight={900} fill={C.gold}>
@@ -126,6 +168,21 @@ const Search: React.FC<{ dur: number }> = ({ dur }) => {
           </g>
         </Phone>
       </At>
+      <Person
+        x={200}
+        y={1300}
+        scale={0.5}
+        {...MAYA}
+        moods={[
+          [0, "think"],
+          [at(dur, 0.62), "happy"],
+        ]}
+        poses={[
+          [0, "chin"],
+          [at(dur, 0.62), "armsUp"],
+        ]}
+        jumps={[at(dur, 0.62), at(dur, 0.75)]}
+      />
       <At x={900} y={560} s={tap}>
         <circle r={70} fill={C.green} />
         <path d="M-30 0 L-8 24 L32 -24" stroke="#fff" strokeWidth={14} fill="none" strokeLinecap="round" strokeLinejoin="round" />
@@ -146,18 +203,21 @@ export const V2: VideoDef = {
       text: "Maya hampir salah mengurus izin usahanya, cuma gara-gara *satu kode lima angka.*",
       kicker: { pill: "CERITA MAYA", text: "Satu kode, lima angka" },
       setting: "plain",
+      camera: { zoom: [1.0, 1.12], focus: [540, 700], punch: [0.55], grade: "cool" },
       Visual: Hook,
     },
     {
       id: "02-tokoh",
       text: "Maya mau buka laundry kiloan di dekat kampus. Tempat sudah ada, mesin cuci sudah dibeli.",
       setting: "laundry",
+      camera: { zoom: [1.12, 1.0], pan: [30, 0], focus: [500, 1000], grade: "cool" },
       Visual: Intro,
     },
     {
       id: "03-konflik",
       text: "Tapi waktu daftar di OSS, dia harus memilih *kode KBLI.* Pilihannya ada ribuan. Yang mana yang benar?",
       setting: "office",
+      camera: { zoom: [1.0, 1.14], focus: [540, 900], shake: [0.3], punch: [0.3], grade: "tense" },
       Visual: Conflict,
     },
     {
@@ -165,6 +225,7 @@ export const V2: VideoDef = {
       text: "Caranya gampang. Buka *legalease.asia/kbli,* ketik cuci pakaian, dan kodenya langsung muncul: *96100.*",
       kicker: { pill: "CARANYA" },
       setting: "plain",
+      camera: { zoom: [1.06, 1.0], tilt: [40, 0], punch: [0.62], grade: "bright" },
       Visual: Search,
     },
     {

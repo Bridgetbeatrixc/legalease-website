@@ -17,3 +17,6 @@ export const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
 /** Gentle looping sine, for idle motion. */
 export const wave = (frame: number, period = 60, amp = 1, phase = 0) =>
   Math.sin(((frame + phase) / period) * Math.PI * 2) * amp;
+
+/** Frame at fraction t of a scene. */
+export const at = (dur: number, t: number) => Math.round(dur * t);

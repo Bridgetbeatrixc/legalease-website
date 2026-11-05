@@ -1,6 +1,6 @@
 import React from "react";
 import { useCurrentFrame } from "remotion";
-import { pop, ramp } from "../components/anim";
+import { at, pop, ramp } from "../components/anim";
 import { EndCard } from "../components/EndCard";
 import { Person, PersonProps } from "../components/Person";
 import { At, Badge, BeanBag, Box, Cup, T } from "../components/Props";
@@ -56,19 +56,47 @@ const Hook: React.FC<{ dur: number }> = ({ dur }) => {
       <At x={300} y={1040} s={x}>
         <Badge ok={false} r={56} />
       </At>
-      <Person x={720} y={1300} scale={0.66} {...BUDI} mood={f > dur * 0.4 ? "worried" : "happy"} pose="idle" />
+      <Person
+        x={720}
+        y={1300}
+        scale={0.66}
+        {...BUDI}
+        moods={[
+          [0, "happy"],
+          [at(dur, 0.4), "shock"],
+          [at(dur, 0.6), "worried"],
+        ]}
+        poses={[
+          [0, "wave"],
+          [at(dur, 0.4), "handsHead"],
+        ]}
+        flinch={[at(dur, 0.4)]}
+      />
     </Svg>
   );
 };
 
-const Intro: React.FC<{ dur: number }> = () => {
+const Intro: React.FC<{ dur: number }> = ({ dur }) => {
   const f = useCurrentFrame();
   return (
     <Svg>
       <At x={540} y={590} s={pop(f, 8)}>
         <CodeChip code="56303" label="Rumah minum / kafe" ok />
       </At>
-      <Person x={300} y={1300} scale={0.78} {...BUDI} mood="happy" pose="present" holding={<At x={20} y={10} s={0.6}><Cup /></At>} />
+      <Person
+        x={300}
+        y={1300}
+        scale={0.78}
+        {...BUDI}
+        mood="happy"
+        walk={{ from: -220, start: 0, dur: 20 }}
+        poses={[
+          [0, "present"],
+          [at(dur, 0.55), "fist"],
+        ]}
+        jumps={[at(dur, 0.55)]}
+        holding={<At x={20} y={10} s={0.6}><Cup /></At>}
+      />
       <At x={760} y={1300}>
         <Counter />
       </At>
@@ -97,7 +125,24 @@ const Conflict: React.FC<{ dur: number }> = ({ dur }) => {
           <BeanBag />
         </At>
       ))}
-      <Person x={190} y={1300} scale={0.66} {...BUDI} mood="shock" pose="shrug" />
+      <Person
+        x={190}
+        y={1300}
+        scale={0.66}
+        {...BUDI}
+        moods={[
+          [0, "happy"],
+          [at(dur, 0.3), "shock"],
+          [at(dur, 0.55), "worried"],
+        ]}
+        poses={[
+          [0, "armsUp"],
+          [at(dur, 0.3), "handsHead"],
+          [at(dur, 0.55), "shrug"],
+        ]}
+        jumps={[6]}
+        flinch={[at(dur, 0.3)]}
+      />
     </Svg>
   );
 };
@@ -137,18 +182,21 @@ export const V3: VideoDef = {
       text: "Kedai kopinya laris. Tapi waktu mau jual biji kopi, *izinnya ternyata tidak cukup.*",
       kicker: { pill: "KESALAHAN UMUM", text: "Salah KBLI, izin ikut salah" },
       setting: "cafe",
+      camera: { zoom: [1.0, 1.12], focus: [500, 1000], punch: [0.4], shake: [0.4], grade: "warm" },
       Visual: Hook,
     },
     {
       id: "02-tokoh",
       text: "Budi membuka kedai kopi dan mendaftarkan satu KBLI: *56303,* rumah minum atau kafe.",
       setting: "cafe",
+      camera: { zoom: [1.12, 1.0], pan: [-30, 0], focus: [450, 900], grade: "warm" },
       Visual: Intro,
     },
     {
       id: "03-konflik",
       text: "Usahanya berkembang. Dia mulai menyangrai kopi sendiri dan menjual biji kopi kemasan. Dua kegiatan ini *tidak tercakup* di KBLI-nya.",
       setting: "cafe",
+      camera: { zoom: [1.0, 1.1], focus: [600, 700], punch: [0.3, 0.5], grade: "tense" },
       Visual: Conflict,
     },
     {
@@ -156,6 +204,7 @@ export const V3: VideoDef = {
       text: "Satu usaha boleh punya beberapa KBLI. Tiap kegiatan perlu kodenya sendiri: kafe, *pengolahan kopi,* dan *perdagangan eceran kopi.*",
       kicker: { pill: "PELAJARANNYA" },
       setting: "plain",
+      camera: { zoom: [1.08, 1.0], tilt: [40, 0], grade: "bright" },
       Visual: Lesson,
     },
     {

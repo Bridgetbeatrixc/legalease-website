@@ -1,6 +1,6 @@
 import React from "react";
 import { useCurrentFrame } from "remotion";
-import { pop, wave } from "../components/anim";
+import { at, pop, wave } from "../components/anim";
 import { EndCard } from "../components/EndCard";
 import { Person, PersonProps } from "../components/Person";
 import { At, Chips, Serum, T, WaterBottle } from "../components/Props";
@@ -52,11 +52,24 @@ const Hook: React.FC<{ dur: number }> = () => {
   );
 };
 
-const Intro: React.FC<{ dur: number }> = () => {
+const Intro: React.FC<{ dur: number }> = ({ dur }) => {
   const f = useCurrentFrame();
   return (
     <Svg>
-      <Person x={300} y={1300} scale={0.86} {...TIKA} mood="happy" pose="present" />
+      <Person
+        x={300}
+        y={1300}
+        scale={0.86}
+        {...TIKA}
+        mood="happy"
+        walk={{ from: -220, start: 0, dur: 20 }}
+        poses={[
+          [0, "wave"],
+          [at(dur, 0.35), "present"],
+          [at(dur, 0.75), "point"],
+        ]}
+        jumps={[at(dur, 0.35)]}
+      />
       {[<Chips key="c" />, <WaterBottle key="w" />, <Serum key="s" />].map((it, i) => (
         <At key={i} x={620 + i * 170} y={1290} s={0.8 * pop(f, 8 + i * 8)}>
           {it}
@@ -79,6 +92,21 @@ const Question: (item: React.ReactNode, answer: string, color: string, w?: numbe
         <At x={540} y={1180} s={a}>
           <Tag text={answer} color={color} w={w} />
         </At>
+        <Person
+          x={215}
+          y={1300}
+          scale={0.52}
+          {...TIKA}
+          moods={[
+            [0, "think"],
+            [at(dur, 0.45), "happy"],
+          ]}
+          poses={[
+            [0, "chin"],
+            [at(dur, 0.45), "armsUp"],
+          ]}
+          jumps={[at(dur, 0.45)]}
+        />
       </Svg>
     );
   };
@@ -95,6 +123,7 @@ export const V4: VideoDef = {
       text: "Tiga produk, dua jenis izin. *Kamu bisa tebak yang mana?*",
       kicker: { pill: "KUIS", text: "PIRT atau BPOM?" },
       setting: "plain",
+      camera: { zoom: [1.0, 1.1], focus: [540, 900], punch: [0.5], grade: "bright" },
       Visual: Hook,
     },
     {
@@ -102,6 +131,7 @@ export const V4: VideoDef = {
       text: "Tika punya tiga produk: keripik singkong, air minum dalam kemasan, dan serum wajah.",
       kicker: { pill: "PRODUK TIKA" },
       setting: "room",
+      camera: { zoom: [1.1, 1.0], pan: [30, 0], focus: [600, 1100], grade: "warm" },
       Visual: Intro,
     },
     {
@@ -109,6 +139,7 @@ export const V4: VideoDef = {
       text: "Keripik singkong buatan rumah? Cukup *PIRT* dari pemerintah daerah.",
       kicker: { pill: "1 / 3", text: "Keripik singkong" },
       setting: "plain",
+      camera: { zoom: [1.0, 1.08], focus: [540, 1050], punch: [0.45], grade: "warm" },
       Visual: Question(<Chips />, "PIRT", C.green),
     },
     {
@@ -116,6 +147,7 @@ export const V4: VideoDef = {
       text: "Air minum dalam kemasan? Wajib *izin edar BPOM,* dan harus memenuhi SNI.",
       kicker: { pill: "2 / 3", text: "Air minum kemasan" },
       setting: "plain",
+      camera: { zoom: [1.0, 1.08], focus: [540, 1050], punch: [0.45], grade: "cool" },
       Visual: Question(<WaterBottle />, "BPOM", C.cobalt),
     },
     {
@@ -123,6 +155,7 @@ export const V4: VideoDef = {
       text: "Serum wajah? Kosmetik juga lewat *BPOM,* dengan notifikasi kosmetik.",
       kicker: { pill: "3 / 3", text: "Serum wajah" },
       setting: "plain",
+      camera: { zoom: [1.0, 1.08], focus: [540, 1050], punch: [0.45], grade: "warm" },
       Visual: Question(<Serum />, "BPOM", C.cobalt),
     },
     {

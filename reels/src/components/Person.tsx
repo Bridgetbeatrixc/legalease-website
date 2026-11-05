@@ -1,9 +1,9 @@
 import React from "react";
-import { useCurrentFrame } from "remotion";
+import { Easing, interpolate, useCurrentFrame } from "remotion";
 import { C, HAIR, SKIN } from "../theme";
 import { wave } from "./anim";
 
-export type Mood = "happy" | "neutral" | "sad" | "shock" | "think" | "worried";
+export type Mood = "happy" | "neutral" | "sad" | "shock" | "think" | "worried" | "angry";
 export type Pose =
   | "idle"
   | "wave"
@@ -14,17 +14,36 @@ export type Pose =
   | "shrug"
   | "handsHead"
   | "present"
-  | "hold";
+  | "hold"
+  | "chin"
+  | "cross"
+  | "slump"
+  | "fist"
+  | "walk";
 export type Hair = "short" | "long" | "hijab" | "bun" | "curly";
 
+/** [frame, value]: from that frame on, the person blends into the value. */
+export type Keys<T> = [number, T][];
+
 export type PersonProps = {
-  /** Feet position in the 1080×1920 scene. */
+  /** Feet position in the 1080×1920 scene (where the person ends up). */
   x: number;
   y: number;
   scale?: number;
   facing?: 1 | -1;
   mood?: Mood;
   pose?: Pose;
+  /** Pose / mood changes over time. Overrides pose / mood. */
+  poses?: Keys<Pose>;
+  moods?: Keys<Mood>;
+  /** Walk in from x = from, starting at frame start, for dur frames. */
+  walk?: { from: number; start?: number; dur?: number };
+  /** Frames at which the person does a little reaction hop. */
+  jumps?: number[];
+  /** Frames at which the person flinches backwards (shock). */
+  flinch?: number[];
+  /** Body lean in degrees (positive = toward facing direction). */
+  lean?: number;
   hair?: Hair;
   hairColor?: string;
   hijabColor?: string;
@@ -44,6 +63,7 @@ export type PersonProps = {
 // forearm inward (negative = outward). Degrees.
 const POSES: Record<Pose, { L: [number, number]; R: [number, number] }> = {
   idle: { L: [8, 6], R: [8, 6] },
+  walk: { L: [8, 10], R: [8, 10] },
   wave: { L: [8, 6], R: [150, 25] },
   armsUp: { L: [150, 10], R: [150, 10] },
   stir: { L: [10, 8], R: [28, 75] },
@@ -53,6 +73,28 @@ const POSES: Record<Pose, { L: [number, number]; R: [number, number] }> = {
   handsHead: { L: [150, -80], R: [150, -80] },
   present: { L: [8, 6], R: [32, -62] },
   hold: { L: [22, 95], R: [22, 95] },
+  chin: { L: [12, 110], R: [16, 142] },
+  cross: { L: [14, 118], R: [14, 118] },
+  slump: { L: [3, 0], R: [3, 0] },
+  fist: { L: [8, 6], R: [40, 150] },
+};
+
+const BLEND = 9;
+const ease = Easing.bezier(0.34, 1.4, 0.64, 1);
+
+/** Value at frame f for keyed changes, with the blend factor into it. */
+const keyed = <T,>(keys: Keys<T>, f: number) => {
+  let prev = keys[0][1];
+  let cur = keys[0][1];
+  let t = 1;
+  for (let i = 0; i < keys.length; i++) {
+    if (f >= keys[i][0]) {
+      prev = i > 0 ? keys[i - 1][1] : keys[i][1];
+      cur = keys[i][1];
+      t = i > 0 ? Math.min(1, (f - keys[i][0]) / BLEND) : 1;
+    }
+  }
+  return { prev, cur, t: ease(Math.max(0, t)) };
 };
 
 const UPPER = 118;
@@ -85,7 +127,7 @@ const Arm: React.FC<{
   );
 };
 
-const Face: React.FC<{ mood: Mood; blink: number; talk: boolean; frame: number }> = ({ mood, blink, talk, frame }) => {
+const Face: React.FC<{ mood: Mood; blink: number; talk: boolean; frame: number; brow?: number }> = ({ mood, blink, talk, frame, brow: blip = 0 }) => {
   const eyeRy = (mood === "shock" ? 13 : 10) * blink;
   const eyeRx = mood === "shock" ? 10 : 8;
   const lookY = mood === "think" ? -6 : 0;
@@ -97,6 +139,7 @@ const Face: React.FC<{ mood: Mood; blink: number; talk: boolean; frame: number }
     worried: [14, -14, 0],
     shock: [-6, 6, -10],
     think: [0, -14, -4],
+    angry: [-18, 18, 4],
   }[mood];
   const mouthOpen = talk ? Math.abs(Math.sin(frame / 2.6)) : 0;
   let mouth: React.ReactNode;
@@ -106,7 +149,7 @@ const Face: React.FC<{ mood: Mood; blink: number; talk: boolean; frame: number }
     mouth = <ellipse cx={200} cy={230} rx={14} ry={3 + mouthOpen * 9} fill={C.ink} />;
   } else if (mood === "happy") {
     mouth = <path d="M180 222 Q200 248 220 222 Z" fill={C.ink} />;
-  } else if (mood === "sad" || mood === "worried") {
+  } else if (mood === "sad" || mood === "worried" || mood === "angry") {
     mouth = <path d="M184 238 Q200 224 216 238" stroke={C.ink} strokeWidth={6} fill="none" strokeLinecap="round" />;
   } else if (mood === "think") {
     mouth = <path d="M188 234 L214 228" stroke={C.ink} strokeWidth={6} fill="none" strokeLinecap="round" />;
@@ -125,7 +168,7 @@ const Face: React.FC<{ mood: Mood; blink: number; talk: boolean; frame: number }
           </>
         ) : null}
       </g>
-      <g transform={`translate(0 ${brow[2]})`}>
+      <g transform={`translate(0 ${brow[2] + blip})`}>
         <line x1={162} y1={172} x2={186} y2={172} stroke={C.ink} strokeWidth={6} strokeLinecap="round" transform={`rotate(${brow[0]} 174 172)`} />
         <line x1={214} y1={172} x2={238} y2={172} stroke={C.ink} strokeWidth={6} strokeLinecap="round" transform={`rotate(${brow[1]} 226 172)`} />
       </g>
@@ -171,6 +214,19 @@ const HairFront: React.FC<{ hair: Hair; color: string; hijab: string }> = ({ hai
   }
 };
 
+const hop = (f: number, at: number) => {
+  // anticipation squash, jump, landing squash
+  const d = f - at;
+  if (d < -4 || d > 22) return { up: 0, sq: 1 };
+  if (d < 0) return { up: 0, sq: 1 - 0.08 * ((d + 4) / 4) };
+  if (d < 14) {
+    const t = d / 14;
+    return { up: Math.sin(t * Math.PI) * 70, sq: 1 + 0.08 * Math.sin(t * Math.PI) };
+  }
+  const t = (d - 14) / 8;
+  return { up: 0, sq: 1 - 0.1 * Math.sin(t * Math.PI) };
+};
+
 export const Person: React.FC<PersonProps> = ({
   x,
   y,
@@ -178,6 +234,12 @@ export const Person: React.FC<PersonProps> = ({
   facing = 1,
   mood = "neutral",
   pose = "idle",
+  poses,
+  moods,
+  walk,
+  jumps = [],
+  flinch = [],
+  lean = 0,
   hair = "short",
   hairColor = HAIR.black,
   hijabColor = C.cobalt,
@@ -192,47 +254,110 @@ export const Person: React.FC<PersonProps> = ({
 }) => {
   const frame = useCurrentFrame();
   const f = frame + seed * 37;
-  const breathe = wave(f, 70, 4);
-  const sway = wave(f, 95, 1.6);
-  const cyc = (f + 20) % 110;
+
+  // walking
+  const wStart = walk?.start ?? 0;
+  const wDur = walk?.dur ?? 24;
+  const wT = walk ? interpolate(frame, [wStart, wStart + wDur], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" }) : 1;
+  const walking = walk ? wT > 0 && wT < 1 : false;
+  const px = walk ? interpolate(Easing.out(Easing.quad)(wT), [0, 1], [walk.from, x]) : x;
+  const step = walking ? Math.sin(frame / 2.4) : 0;
+  const stepBob = walking ? Math.abs(Math.sin(frame / 2.4)) * 16 : 0;
+
+  // pose / mood keyframes
+  const pk = keyed(poses ?? [[0, pose]], frame);
+  const curPose: Pose = walking ? "walk" : pk.cur;
+  const prevPose: Pose = walking ? "walk" : pk.prev;
+  const pt = walking ? 1 : pk.t;
+  const mk = keyed(moods ?? [[0, mood]], frame);
+  const curMood = mk.cur;
+
+  // reactions
+  let up = 0;
+  let sq = 1;
+  for (const j of jumps) {
+    const h = hop(frame, j);
+    up = Math.max(up, h.up);
+    sq *= h.sq;
+  }
+  let back = 0;
+  for (const fl of flinch) {
+    const d = frame - fl;
+    if (d >= 0 && d < 18) back += Math.sin((d / 18) * Math.PI) * -9 * (1 - d / 18) * 2;
+  }
+  const slumped = curPose === "slump" ? pt : prevPose === "slump" ? 1 - pt : 0;
+
+  const breathe = wave(f, 60, 5);
+  const sway = wave(f, 85, 2.4) + (walking ? step * 3 : 0);
+  const cyc = (f + 20) % 96;
   const blink = cyc < 4 ? Math.abs(cyc - 2) / 2 : 1;
-  const p = POSES[pose];
-  // Small idle motion on top of the pose.
-  const wob = pose === "wave" ? wave(f, 16, 18) : pose === "stir" ? wave(f, 22, 18) : wave(f, 80, 3);
-  const bob = pose === "armsUp" ? Math.abs(wave(f, 24, 14)) : 0;
+  const browBlip = cyc > 40 && cyc < 52 ? Math.sin(((cyc - 40) / 12) * Math.PI) * -5 : 0;
+
+  const A = POSES[prevPose];
+  const B = POSES[curPose];
+  const mix = (a: number, b: number) => a + (b - a) * pt;
+  const L: [number, number] = [mix(A.L[0], B.L[0]), mix(A.L[1], B.L[1])];
+  const R: [number, number] = [mix(A.R[0], B.R[0]), mix(A.R[1], B.R[1])];
+  // secondary motion on top of the pose
+  const live = (a: number, period: number, amp: number, ph = 0) => a + wave(f, period, amp, ph);
+  if (curPose === "wave") R[0] = live(R[0], 16, 18);
+  if (curPose === "stir") {
+    R[0] = live(R[0], 22, 18);
+    R[1] = live(R[1], 22, 10, 6);
+  }
+  if (curPose === "armsUp") {
+    L[0] = live(L[0], 14, 12);
+    R[0] = live(R[0], 14, 12, 7);
+  }
+  if (curPose === "handsHead") {
+    L[0] = live(L[0], 10, 4);
+    R[0] = live(R[0], 10, 4, 5);
+  }
+  if (curPose === "point" || curPose === "present" || curPose === "fist") R[0] = live(R[0], 40, 4);
+  if (curPose === "idle" || curPose === "slump" || curPose === "cross") {
+    L[0] = live(L[0], 80, 3);
+    R[0] = live(R[0], 80, 3, 20);
+  }
+  if (walking) {
+    L[0] = 8 + step * 26;
+    R[0] = 8 - step * 26;
+  }
+  const bounce = curPose === "armsUp" ? Math.abs(wave(f, 14, 18)) : 0;
   const forearm = sleeves === "long" ? shirt : skin;
   const neckShow = hair !== "hijab";
+  const headTilt = wave(f, 110, 4) + (curMood === "think" ? 8 : 0) + slumped * 12 + (curMood === "happy" ? wave(f, 30, 3) : 0);
+  const headDrop = slumped * 26;
+  const leg = (side: number) => (walking ? step * 22 * side : 0);
 
   return (
-    <g transform={`translate(${x} ${y}) scale(${scale * facing} ${scale}) translate(-200 -800)`}>
-      <ellipse cx={200} cy={798} rx={130} ry={18} fill={C.shadow} />
-      <g transform={`translate(0 ${-bob})`}>
+    <g transform={`translate(${px} ${y}) scale(${scale * facing} ${scale}) translate(-200 -800)`}>
+      <ellipse cx={200} cy={798} rx={130 - up * 0.6} ry={18 - up * 0.08} fill={C.shadow} />
+      <g transform={`translate(200 800) scale(${2 - sq} ${sq}) translate(-200 -800) translate(0 ${-bounce - up - stepBob})`}>
         {/* legs */}
-        {outfit === "pants" ? (
-          <>
-            <rect x={142} y={540} width={52} height={236} rx={24} fill={pants} />
-            <rect x={206} y={540} width={52} height={236} rx={24} fill={pants} />
-          </>
-        ) : (
-          <>
-            <rect x={160} y={600} width={30} height={176} rx={14} fill={skin} />
-            <rect x={210} y={600} width={30} height={176} rx={14} fill={skin} />
-          </>
-        )}
-        <ellipse cx={164} cy={780} rx={40} ry={18} fill={C.ink} />
-        <ellipse cx={236} cy={780} rx={40} ry={18} fill={C.ink} />
-        <g transform={`translate(0 ${breathe * 0.5}) rotate(${sway} 200 560)`}>
-          {/* back arm first */}
-          <Arm side="L" a1={p.L[0] + (pose === "idle" ? wob : 0)} a2={p.L[1]} sleeve={shirt} forearm={forearm} skin={skin} />
-          {/* torso */}
+        {[
+          [168, 1],
+          [232, -1],
+        ].map(([hx, side]) => (
+          <g key={hx} transform={`rotate(${leg(side)} ${hx} 560)`}>
+            {outfit === "pants" ? (
+              <rect x={hx - 26} y={540} width={52} height={236} rx={24} fill={pants} />
+            ) : (
+              <rect x={hx - 15} y={600} width={30} height={176} rx={14} fill={skin} />
+            )}
+            <ellipse cx={hx - 4 * side} cy={780} rx={40} ry={18} fill={C.ink} />
+          </g>
+        ))}
+        <g transform={`translate(0 ${breathe * 0.6 + slumped * 14}) rotate(${sway + lean + back} 200 560)`}>
+          <Arm side="L" a1={L[0]} a2={L[1]} sleeve={shirt} forearm={forearm} skin={skin} />
           {outfit === "pants" ? (
             <path d="M142 298 Q116 300 116 334 L126 566 L274 566 L284 334 Q284 300 258 298 Z" fill={shirt} />
           ) : (
             <path d="M142 298 Q116 300 116 334 L96 640 L304 640 L284 334 Q284 300 258 298 Z" fill={shirt} />
           )}
           <path d="M170 298 L200 340 L230 298 Z" fill="rgba(255,255,255,0.35)" />
-          {/* head */}
-          <g transform={`translate(0 ${breathe * 0.3}) rotate(${wave(f, 120, 2.5)} 200 270)`}>
+          {/* soft shading on the torso */}
+          <path d="M240 300 Q284 300 284 334 L274 566 L236 566 Z" fill="rgba(0,0,0,0.08)" />
+          <g transform={`translate(0 ${breathe * 0.4 + headDrop}) rotate(${headTilt} 200 270)`}>
             <HairBack hair={hair} color={hairColor} hijab={hijabColor} />
             {neckShow ? <rect x={182} y={246} width={36} height={60} rx={12} fill={skin} /> : null}
             {hair !== "hijab" ? (
@@ -242,18 +367,13 @@ export const Person: React.FC<PersonProps> = ({
               </>
             ) : null}
             <circle cx={200} cy={192} r={hair === "hijab" ? 66 : 72} fill={skin} />
+            <path d="M236 132 Q276 160 268 220 Q254 258 214 262 Q262 230 236 132 Z" fill="rgba(0,0,0,0.06)" />
             <HairFront hair={hair} color={hairColor} hijab={hijabColor} />
-            <Face mood={mood} blink={blink} talk={talk} frame={f} />
+            <g transform={`translate(0 ${browBlip * 0.2})`}>
+              <Face mood={curMood} blink={blink} talk={talk} frame={f} brow={browBlip} />
+            </g>
           </g>
-          <Arm
-            side="R"
-            a1={p.R[0] + (pose === "wave" || pose === "stir" ? wob : pose === "idle" ? -wob : 0)}
-            a2={p.R[1] + (pose === "stir" ? wave(f, 22, 10, 6) : 0)}
-            sleeve={shirt}
-            forearm={forearm}
-            skin={skin}
-            holding={holding}
-          />
+          <Arm side="R" a1={R[0]} a2={R[1]} sleeve={shirt} forearm={forearm} skin={skin} holding={holding} />
         </g>
       </g>
     </g>
