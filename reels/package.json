@@ -5,7 +5,9 @@
   "scripts": {
     "studio": "remotion studio",
     "storyboard": "node scripts/storyboard.mjs",
-    "render": "node scripts/render.mjs"
+    "render": "node scripts/render.mjs",
+    "vo": "node ../../voprompter/bin/voprompter.mjs vo/legalease-reels.json --lang=indonesian --out=vo/takes",
+    "vo:import": "node scripts/import-vo.mjs"
   },
   "dependencies": {
     "@fontsource/montserrat": "^5.3.0",

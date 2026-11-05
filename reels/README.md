@@ -47,3 +47,18 @@ On a machine without a downloadable Chrome, point Remotion at an existing one wi
 - `src/timing.ts`: reads dub lengths and sets each scene's duration.
 
 Remotion is free for individuals and companies with up to 3 employees; larger teams need a company license (remotion.pro).
+
+## Dubbing with voprompter
+
+The 31 lines are in `vo/legalease-reels.json` (part = video, cue = scene) for
+[voprompter](https://github.com/Bridgetbeatrixc/voprompter):
+
+```bash
+node <path-to>/voprompter/bin/voprompter.mjs vo/legalease-reels.json --lang=indonesian --out=vo/takes
+# open http://localhost:3200, press Space at the start of every line
+npm run vo:import      # splits vo/takes/*.wav at the markers → public/audio/<video>/<scene>.wav
+npm run render
+```
+
+Record all 6 in one take (`vo.wav`) or part by part (`<video-id>.wav`); a part
+take wins over the full take for that video.
