@@ -8,6 +8,7 @@ import { Svg } from "../components/Stage";
 import { C, FONT } from "../theme";
 import type { VideoDef } from "../types";
 import MOUTH from "../data/orderan-bu-sari-mouth.json";
+import { Floaties, KitchenBG, Stickers } from "./ep1-extras";
 
 // Times inside each scene are seconds of its dub (ElevenLabs take, 10 Nov 2026).
 const s = (sec: number) => Math.round(sec * 30);
@@ -314,6 +315,9 @@ const Hook: React.FC<{ dur: number }> = () => {
   const dim = ramp(f, turn, turn + 18) * 0.38;
   return (
     <Svg>
+      <KitchenBG />
+      <Floaties kind="heart" from={s(1.6)} to={s(3.0)} x={330} y={760} />
+      <Floaties kind="rain" from={s(5.0)} to={s(8.2)} x={330} y={600} spread={200} every={9} />
       <At x={540} y={460} s={pop(f, 4)}>
         <Sign front="Katering Bu Sari" />
       </At>
@@ -443,6 +447,9 @@ const Intro: React.FC<{ dur: number }> = () => {
   const flyT = ramp(f, handOff, handOff + 16);
   return (
     <Svg>
+      <KitchenBG />
+      <Floaties kind="heart" from={s(1.3)} to={s(2.8)} x={330} y={760} />
+      <Floaties kind="star" from={s(4.3)} to={s(6.0)} x={800} y={900} />
       <At x={540} y={460} s={pop(f, 2)} r={wave(f, 60, 2)}>
         <Sign front="Katering Bu Sari" />
       </At>
@@ -538,6 +545,8 @@ const Conflict: React.FC<{ dur: number }> = () => {
   const book = pop(f, s(13.5));
   return (
     <Svg>
+      <KitchenBG />
+      <Floaties kind="rain" from={s(11.4)} to={s(15.2)} x={240} y={640} spread={220} every={8} />
       <Chibi
         {...SARI}
         x={240}
@@ -627,6 +636,8 @@ const Temptation: React.FC<{ dur: number }> = () => {
   const contract = pop(f, s(3.5));
   return (
     <Svg>
+      <KitchenBG />
+      <Floaties kind="coin" from={s(1.4)} to={s(3.6)} x={650} y={700} spread={420} every={5} />
       <At x={650} y={560}>
         {bubbleT > 0.01 ? (
           <Thought t={bubbleT} w={760} h={600} tailX={-300} tailY={300}>
@@ -724,6 +735,9 @@ const Lesson: React.FC<{ dur: number }> = () => {
   const five = finale + 6;
   return (
     <Svg>
+      <KitchenBG />
+      <Floaties kind="star" from={s(3.0)} to={s(4.6)} x={540} y={800} spread={500} />
+      <Floaties kind="heart" from={s(11.4)} to={s(14.8)} x={540} y={900} spread={600} every={5} />
       {LESSON_DOCS.map(([a, b], i) => {
         const st = s(2.0) + i * 5;
         const t = interpolate(f, [st, st + 16], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp", easing: Easing.out(Easing.back(1.3)) });
@@ -821,6 +835,9 @@ const Ending: React.FC<{ dur: number }> = () => {
   const signed = s(1.9);
   return (
     <Svg>
+      <KitchenBG />
+      <Floaties kind="heart" from={s(1.9)} to={s(5.6)} x={540} y={900} spread={700} every={5} />
+      <Floaties kind="star" from={s(2.2)} to={s(5.6)} x={540} y={700} spread={800} every={6} />
       <At x={540} y={440}>
         <Sign front="Katering Bu Sari" back="✓ Badan usaha resmi" flip={flip} w={620} />
       </At>
@@ -972,6 +989,7 @@ export const V7: VideoDef = {
   scenes: [
     {
       id: "01-hook",
+      Overlay: () => <Stickers words={[{ at: 0.3, text: "TING!", x: 760, y: 1700, r: 8, color: "#FF5C7A" }, { at: 2.4, text: "150 KOTAK/HARI!", x: 540, y: 1700, size: 64 }, { at: 3.4, text: "6 BULAN!", x: 760, y: 1815, r: 6, color: "#7CE0A3" }, { at: 4.9, text: "TAPI...", x: 540, y: 1700, size: 96, color: "#FF5C7A", hold: 2.5 }]} />,
       text: "Orderan seratus lima puluh kotak sehari, kontrak enam bulan! Tapi Bu Sari... *hampir kehilangannya.*",
       setting: "kitchen",
       vivid: true,
@@ -991,6 +1009,7 @@ export const V7: VideoDef = {
     },
     {
       id: "02-tokoh",
+      Overlay: () => <Stickers words={[{ at: 0.3, text: "INI BU SARI!", x: 540, y: 1700, color: "#FFC93C" }, { at: 1.4, text: "5 TAHUN", x: 780, y: 1815, r: 7, color: "#7CE0A3" }, { at: 4.3, text: "Tetangga", x: 300, y: 1700, r: -8, color: "#FF8FA3", size: 72 }, { at: 5.2, text: "Kantor kecil", x: 720, y: 1815, r: 6, color: "#9BD6FF", size: 72 }]} />,
       text: "Ini Bu Sari. Katering rumahannya sudah jalan lima tahun. Pelanggannya tetangga, dan kantor-kantor kecil di sekitar rumah.",
       setting: "kitchen",
       vivid: true,
@@ -1009,6 +1028,7 @@ export const V7: VideoDef = {
     },
     {
       id: "03-konflik",
+      Overlay: () => <Stickers words={[{ at: 0.8, text: "SYARAT VENDOR", x: 540, y: 1700, size: 76, color: "#FF8FA3" }, { at: 4.7, text: "BADAN USAHA?", x: 540, y: 1700, size: 88, hold: 1.8 }, { at: 11.4, text: "cuma KTP...", x: 540, y: 1700, color: "#9BD6FF", hold: 2.4 }]} />,
       text: "Lalu, kantor besar itu kirim syarat vendor. Invoice harus atas nama *badan usaha,* lengkap dengan akta, NIB, dan *NPWP badan.* Bu Sari cuma punya KTP... dan rekening pribadi.",
       setting: "kitchen",
       vivid: true,
@@ -1031,6 +1051,7 @@ export const V7: VideoDef = {
     },
     {
       id: "04-godaan",
+      Overlay: () => <Stickers words={[{ at: 0.3, text: "Hmm...", x: 260, y: 1700, r: -8, color: "#9BD6FF" }, { at: 4.0, text: "Uangnya ke siapa?", x: 540, y: 1700, size: 70, color: "#FF8FA3", hold: 2 }, { at: 6.8, text: "BERISIKO!", x: 540, y: 1700, size: 96, color: "#FF5C7A", hold: 2.6 }]} />,
       text: "Sempat terpikir, pinjam PT punya teman. Tapi nanti, kontrak dan uangnya atas nama orang lain. Kalau ada masalah, *Bu Sari tidak punya pegangan.*",
       setting: "kitchen",
       vivid: true,
@@ -1049,6 +1070,7 @@ export const V7: VideoDef = {
     },
     {
       id: "05-pelajaran",
+      Overlay: () => <Stickers words={[{ at: 0.1, text: "TENANG!", x: 540, y: 1700, size: 100, color: "#7CE0A3" }, { at: 5.2, text: "MULAI DARI PT PERORANGAN", x: 540, y: 1700, size: 50, r: -3, hold: 2.4 }, { at: 8.4, text: "CV & PT", x: 760, y: 1815, r: 7, color: "#9BD6FF" }, { at: 11.4, text: "TOS!", x: 540, y: 1700, size: 100, color: "#FF8FA3" }]} />,
       text: "Tenang, Bu Sari! Solusinya, punya *badan usaha sendiri.* Usaha kecil bisa mulai dari *PT Perorangan.* Atau CV dan PT, kalau mau berkembang bareng partner. Kontrak dan uangnya jadi atas nama *usahamu sendiri.*",
       setting: "kitchen",
       vivid: true,
@@ -1067,6 +1089,7 @@ export const V7: VideoDef = {
     },
     {
       id: "06-akhir",
+      Overlay: () => <Stickers words={[{ at: 1.9, text: "RESMI!", x: 540, y: 1700, size: 96, color: "#7CE0A3", hold: 1.6 }, { at: 3.6, text: "VENDOR KANTOR BESAR", x: 540, y: 1700, size: 60, hold: 2 }]} />,
       text: "Sekarang, Bu Sari *resmi jadi vendor* kantor besar itu. Atas nama usahanya sendiri.",
       setting: "kitchen",
       vivid: true,

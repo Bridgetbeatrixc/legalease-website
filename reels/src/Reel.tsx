@@ -32,6 +32,7 @@ export const SceneFrame: React.FC<{ scene: SceneDef; dur: number; first?: boolea
         </AbsoluteFill>
       )}
       {scene.vivid ? null : <Look grade={grade} />}
+      {scene.Overlay ? <scene.Overlay dur={dur} /> : null}
       <Watermark dark={dark || scene.vivid} center={scene.vivid} />
       {scene.kicker ? <Kicker {...scene.kicker} dark={dark} /> : null}
       <Caption text={scene.text} dur={dur} dark={dark} />
