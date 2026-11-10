@@ -1,0 +1,162 @@
+<title>LegalEase VO Prompter</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;700;800&display=swap">
+<style>
+/* Layout: one full-height stage, a slim status bar on top, one huge line in the middle, one big control at the bottom. Dark only, like a real prompter. */
+:root {
+  --ink: #0B1630;
+  --panel: #13244A;
+  --line: #24396A;
+  --paper: #F4F3EF;
+  --muted: #9FB0CF;
+  --gold: #E7B348;
+  --cobalt: #3B8FE0;
+  --rec: #E5484D;
+  --ok: #2FA36B;
+  --display: "Montserrat", "Helvetica Neue", Arial, sans-serif;
+  color-scheme: dark;
+}
+html, body { height: 100%; }
+body { background: var(--ink); color: var(--paper); font-family: var(--display); }
+.app { height: 100%; display: flex; flex-direction: column; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 12px; box-sizing: border-box; max-width: 900px; margin: 0 auto; gap: 12px; }
+.bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; font-size: 13px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+.bar b { color: var(--paper); }
+.dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: var(--rec); margin-right: 8px; animation: pulse 1.2s infinite; vertical-align: 0; }
+@keyframes pulse { 50% { opacity: .25; } }
+.progress { height: 4px; background: var(--line); border-radius: 4px; overflow: hidden; }
+.progress i { display: block; height: 100%; background: var(--gold); width: 0; transition: width .3s; }
+.stage { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: safe center; gap: 18px; overflow-y: auto; }
+.file { font-size: 13px; font-weight: 700; color: var(--cobalt); letter-spacing: .04em; }
+.text { font-size: clamp(30px, 7.4vw, 54px); line-height: 1.28; font-weight: 800; text-wrap: pretty; }
+.text mark { background: none; color: var(--gold); }
+.next { font-size: 15px; font-weight: 500; color: var(--muted); line-height: 1.5; }
+.next b { color: var(--paper); font-weight: 700; }
+.hush { text-align: center; display: flex; flex-direction: column; align-items: center; gap: 14px; }
+.hush .n { font-size: clamp(90px, 28vw, 170px); font-weight: 800; color: var(--gold); line-height: 1; font-variant-numeric: tabular-nums; }
+.hush .w { font-size: 22px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; }
+.hush .s { font-size: 15px; color: var(--muted); max-width: 30ch; line-height: 1.45; }
+.controls { display: grid; grid-template-columns: 1fr 2.2fr; gap: 10px; padding-bottom: env(safe-area-inset-bottom, 0px); }
+button { font-family: var(--display); font-weight: 800; font-size: 18px; border: 0; border-radius: 16px; padding: 20px 14px; cursor: pointer; color: var(--paper); background: var(--panel); }
+button.primary { background: var(--gold); color: var(--ink); font-size: 20px; }
+button:disabled { opacity: .35; cursor: default; }
+button:focus-visible { outline: 3px solid var(--cobalt); outline-offset: 3px; }
+.intro { display: flex; flex-direction: column; gap: 16px; }
+.intro h1 { font-size: clamp(30px, 8vw, 46px); line-height: 1.08; margin: 0; text-wrap: balance; }
+.intro h1 span { color: var(--gold); }
+.intro ol { margin: 0; padding-left: 22px; display: flex; flex-direction: column; gap: 8px; font-size: 16px; line-height: 1.45; color: var(--paper); }
+.intro ol b { color: var(--gold); }
+.list { display: grid; gap: 6px; font-size: 14px; color: var(--muted); }
+.list div { display: flex; justify-content: space-between; gap: 10px; padding: 10px 12px; background: var(--panel); border-radius: 10px; }
+.list div span:last-child { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.done textarea { width: 100%; box-sizing: border-box; min-height: 90px; background: var(--panel); color: var(--paper); border: 1px solid var(--line); border-radius: 12px; padding: 12px; font: 600 15px/1.4 var(--display); }
+@media (prefers-reduced-motion: reduce) { .dot { animation: none; } .progress i { transition: none; } }
+</style>
+
+<div class="app">
+  <div class="bar"><span id="where">VO Prompter · 6 video · 31 baris</span><span id="clock"></span></div>
+  <div class="progress"><i id="bar"></i></div>
+  <div class="stage" id="stage"></div>
+  <div class="controls" id="controls"></div>
+</div>
+
+<script>
+const VIDEOS = [{"id": "mitos-usaha-rumahan", "title": "Mitos: Usaha Rumahan Tidak Perlu Izin", "date": "Jumat 13 Nov 2026", "lines": [{"id": "01-hook", "text": "Sambalnya sudah masuk supermarket. Seminggu kemudian, *semuanya dikembalikan.*"}, {"id": "02-tokoh", "text": "Ini Dimas. Dia bikin sambal botolan dari dapur rumahnya, dan pesanannya terus bertambah."}, {"id": "03-konflik", "text": "Lalu supermarket minta dua hal: *NIB* dan *nomor PIRT.* Dimas tidak punya keduanya. Kerja samanya batal."}, {"id": "04-pelajaran", "text": "Faktanya, usaha sekecil apa pun perlu *NIB* dari OSS. Pangan olahan rumahan juga biasanya perlu *PIRT* sebelum dijual luas."}, {"id": "05-jualan", "text": "Jangan sampai peluang besar hilang karena izin. LegalEase urus NIB dan PIRT-mu dari awal. Konsultasi gratis, chat WhatsApp di bio."}]}, {"id": "cari-kbli-30-detik", "title": "Cari KBLI Usahamu dalam 30 Detik", "date": "Senin 16 Nov 2026", "lines": [{"id": "01-hook", "text": "Maya hampir salah mengurus izin usahanya, cuma gara-gara *satu kode lima angka.*"}, {"id": "02-tokoh", "text": "Maya mau buka laundry kiloan di dekat kampus. Tempat sudah ada, mesin cuci sudah dibeli."}, {"id": "03-konflik", "text": "Tapi waktu daftar di OSS, dia harus memilih *kode KBLI.* Pilihannya ada ribuan. Yang mana yang benar?"}, {"id": "04-pelajaran", "text": "Caranya gampang. Buka *legalease.asia/kbli,* ketik cuci pakaian, dan kodenya langsung muncul: *96100.*"}, {"id": "05-jualan", "text": "Sudah ketemu kodenya? Biar LegalEase yang urus NIB dan izinnya sampai terbit. Cek KBLI gratis, link di bio."}]}, {"id": "salah-pilih-kbli", "title": "Salah Pilih KBLI, Izinnya Ikut Salah", "date": "Jumat 20 Nov 2026", "lines": [{"id": "01-hook", "text": "Kedai kopinya laris. Tapi waktu mau jual biji kopi, *izinnya ternyata tidak cukup.*"}, {"id": "02-tokoh", "text": "Budi membuka kedai kopi dan mendaftarkan satu KBLI: *56303,* rumah minum atau kafe."}, {"id": "03-konflik", "text": "Usahanya berkembang. Dia mulai menyangrai kopi sendiri dan menjual biji kopi kemasan. Dua kegiatan ini *tidak tercakup* di KBLI-nya."}, {"id": "04-pelajaran", "text": "Satu usaha boleh punya beberapa KBLI. Tiap kegiatan perlu kodenya sendiri: kafe, *pengolahan kopi,* dan *perdagangan eceran kopi.*"}, {"id": "05-jualan", "text": "Rencana usahamu mau ke mana? LegalEase bantu cocokkan semua KBLI-nya dari awal. Chat WhatsApp di bio."}]}, {"id": "kuis-pirt-atau-bpom", "title": "PIRT atau BPOM? Tebak Produk Ini", "date": "Senin 23 Nov 2026", "lines": [{"id": "01-hook", "text": "Tiga produk, dua jenis izin. *Kamu bisa tebak yang mana?*"}, {"id": "02-tokoh", "text": "Tika punya tiga produk: keripik singkong, air minum dalam kemasan, dan serum wajah."}, {"id": "03-keripik", "text": "Keripik singkong buatan rumah? Cukup *PIRT* dari pemerintah daerah."}, {"id": "04-air", "text": "Air minum dalam kemasan? Wajib *izin edar BPOM,* dan harus memenuhi SNI."}, {"id": "05-serum", "text": "Serum wajah? Kosmetik juga lewat *BPOM,* dengan notifikasi kosmetik."}, {"id": "06-jualan", "text": "Salah pilih izin bisa bikin produkmu ditolak toko dan marketplace. Bingung produkmu masuk yang mana? Tanya LegalEase gratis lewat WhatsApp di bio."}]}, {"id": "hitung-pph-tanpa-rumus", "title": "Hitung PPh Usahamu Tanpa Rumus", "date": "Senin 30 Nov 2026", "lines": [{"id": "01-hook", "text": "Lina takut membuka urusan pajaknya. Dia kira tagihannya *puluhan juta.*"}, {"id": "02-tokoh", "text": "Lina jualan baju online. Omzetnya sekitar 60 juta sebulan, atau *720 juta setahun.*"}, {"id": "03-konflik", "text": "Dia pernah dengar UMKM kena pajak 0,5 persen, tapi tidak tahu cara menghitungnya. Jadi dia *terus menunda.*"}, {"id": "04-pelajaran", "text": "Untuk pengusaha orang pribadi, *500 juta pertama* omzet setahun tidak kena pajak. Sisanya 220 juta dikali 0,5 persen. Pajaknya cuma *1,1 juta rupiah* setahun."}, {"id": "05-jualan", "text": "Hitung punyamu gratis di *legalease.asia/kalkulator-pph.* Mau laporannya diurus sekalian? Chat LegalEase di bio."}]}, {"id": "mitos-belum-untung-spt", "title": "Mitos: Belum Untung, Tidak Perlu Lapor SPT", "date": "Rabu 2 Des 2026", "lines": [{"id": "01-hook", "text": "Usahanya belum untung sepeser pun. Tapi *tetap kena denda pajak.*"}, {"id": "02-tokoh", "text": "Andi mendirikan PT tahun lalu. Tahun pertama masih rugi, jadi dia pikir tidak ada yang perlu dilaporkan."}, {"id": "03-konflik", "text": "Lalu datang *surat teguran.* SPT Tahunan PT-nya tidak pernah dilaporkan."}, {"id": "04-pelajaran", "text": "Faktanya, SPT tetap wajib dilaporkan walau usaha rugi. SPT Tahunan PT paling lambat *akhir April,* dan dendanya *1 juta rupiah* kalau terlambat."}, {"id": "05-jualan", "text": "Fokus saja ke usahamu. Laporan pajaknya biar LegalEase yang urus. Chat WhatsApp di bio."}]}];
+const LINE_PAUSE = 3, VIDEO_PAUSE = 6, START_PAUSE = 4;
+const queue = [];
+VIDEOS.forEach((v, vi) => v.lines.forEach((l, li) => queue.push({ vi, li, v, l })));
+const $ = (id) => document.getElementById(id);
+let i = -1, takes = [], t0 = 0, timer = null, clockTimer = null, lock = null;
+
+const esc = (s) => s.replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c]));
+const fmt = (s) => esc(s).replace(/\*([^*]+)\*/g, "<mark>$1</mark>");
+const plain = (s) => s.replace(/\*/g, "");
+const words = (s) => plain(s).split(/\s+/).filter(Boolean).length;
+
+function button(label, cls, fn, disabled) {
+  const b = document.createElement("button");
+  b.textContent = label; if (cls) b.className = cls; b.onclick = fn; b.disabled = !!disabled; return b;
+}
+function setControls(...btns) { const c = $("controls"); c.replaceChildren(...btns); c.style.gridTemplateColumns = btns.length === 1 ? "1fr" : "1fr 2.2fr"; }
+
+function intro() {
+  const total = queue.reduce((n, q) => n + words(q.l.text) / 2.4 + LINE_PAUSE, 0) + VIDEOS.length * VIDEO_PAUSE;
+  $("stage").innerHTML = `<div class="intro">
+    <h1>Rekam 6 video <span>sekali jalan.</span></h1>
+    <ol>
+      <li>Buka aplikasi perekam suara di ponsel lain, laptop, atau ponsel ini di latar belakang, lalu <b>mulai rekam</b>.</li>
+      <li>Tekan <b>Mulai</b>. Tunggu hitungan mundur, lalu baca kalimat yang muncul.</li>
+      <li>Selesai satu kalimat, tekan <b>Lanjut</b>. Tetap diam selama hitungan jeda, karena jeda itu yang dipakai untuk memotong rekaman.</li>
+      <li>Salah baca? Tekan <b>Ulangi</b>. Kalimat yang sama muncul lagi setelah jeda, dan saya pakai yang terakhir.</li>
+      <li>Di akhir, salin <b>catatan rekaman</b> dan kirim bersama file audionya.</li>
+    </ol>
+    <div class="list">${VIDEOS.map((v, n) => `<div><span>${n + 1}. ${esc(v.title)}</span><span>${v.lines.length} baris</span></div>`).join("")}</div>
+    <div class="next">Total sekitar ${Math.round(total / 60)} menit termasuk jeda.</div>
+  </div>`;
+  setControls(button("Mulai", "primary", start));
+}
+
+async function start() {
+  try { lock = await navigator.wakeLock?.request("screen"); } catch (e) { lock = null; }
+  t0 = performance.now();
+  clockTimer = setInterval(tick, 500); tick();
+  hush(START_PAUSE, "Siap-siap", "Mulai bicara saat kalimat pertama muncul.", () => show(0));
+}
+
+function tick() {
+  const s = Math.floor((performance.now() - t0) / 1000);
+  $("clock").innerHTML = `<span class="dot"></span>${String(Math.floor(s / 60)).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+}
+
+function hush(sec, word, sub, then) {
+  clearInterval(timer);
+  let n = sec;
+  const draw = () => { $("stage").innerHTML = `<div class="hush"><div class="w">${word}</div><div class="n">${n}</div><div class="s">${sub}</div></div>`; };
+  draw();
+  setControls(button("Jeda…", "", null, true));
+  timer = setInterval(() => { n--; if (n <= 0) { clearInterval(timer); then(); } else draw(); }, 1000);
+}
+
+function show(k) {
+  i = k;
+  const q = queue[i];
+  takes.push({ line: i, at: ((performance.now() - t0) / 1000).toFixed(1) });
+  $("where").innerHTML = `Video <b>${q.vi + 1}/6</b> · Baris <b>${q.li + 1}/${q.v.lines.length}</b>`;
+  $("bar").style.width = `${(i / queue.length) * 100}%`;
+  const nx = queue[i + 1];
+  const nextTxt = !nx ? "Ini kalimat terakhir." : nx.vi !== q.vi ? `Berikutnya video baru: <b>${esc(nx.v.title)}</b>` : `Berikutnya: ${esc(plain(nx.l.text)).slice(0, 70)}…`;
+  $("stage").innerHTML = `<div class="file">${esc(q.v.title)} · ${q.l.id}</div><div class="text">${fmt(q.l.text)}</div><div class="next">${nextTxt}</div>`;
+  setControls(button("Ulangi", "", retake), button(nx ? "Lanjut" : "Selesai", "primary", advance));
+}
+
+function retake() { hush(LINE_PAUSE, "Ulangi", "Diam dulu. Kalimat yang sama muncul lagi.", () => show(i)); }
+
+function advance() {
+  const nx = queue[i + 1];
+  if (!nx) return finish();
+  if (nx.vi !== queue[i].vi) hush(VIDEO_PAUSE, "Ganti video", `Berikutnya: ${esc(nx.v.title)}`, () => show(i + 1));
+  else hush(LINE_PAUSE, "Jeda", "Tetap diam sampai kalimat berikutnya muncul.", () => show(i + 1));
+}
+
+function finish() {
+  clearInterval(clockTimer);
+  try { lock?.release(); } catch (e) {}
+  $("bar").style.width = "100%";
+  $("where").innerHTML = "Selesai · <b>31/31</b>";
+  const log = "VO-LOG " + takes.map((t) => `${t.line + 1}@${t.at}`).join(" ");
+  const retakes = takes.length - queue.length;
+  $("stage").innerHTML = `<div class="intro done">
+    <h1>Selesai. <span>Stop rekamannya.</span></h1>
+    <div class="next">Kirim file audionya ke chat, lalu tempel catatan di bawah ini di pesan yang sama. ${retakes > 0 ? `Ada ${retakes} pengulangan; catatan ini memberi tahu saya take mana yang dipakai.` : "Tidak ada pengulangan."}</div>
+    <textarea id="log" readonly>${log}</textarea>
+  </div>`;
+  const copy = button("Salin catatan", "primary", async () => {
+    const t = $("log");
+    try { await navigator.clipboard.writeText(t.value); copy.textContent = "Tersalin"; }
+    catch (e) { t.focus(); t.select(); copy.textContent = "Pilih teks lalu salin"; }
+  });
+  setControls(button("Ulang dari awal", "", () => { takes = []; i = -1; $("clock").textContent = ""; $("bar").style.width = "0"; intro(); }), copy);
+}
+
+intro();
+</script>
