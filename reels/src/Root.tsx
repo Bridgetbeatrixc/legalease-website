@@ -3,6 +3,7 @@ import { CalculateMetadataFunction, Composition, continueRender, delayRender } f
 import { fontsReady } from "./fonts";
 import { Reel } from "./Reel";
 import { Storyboard } from "./Storyboard";
+import { CharSheet } from "./CharSheet";
 import { FPS, H, W } from "./theme";
 import { sceneTiming } from "./timing";
 import type { ReelProps } from "./types";
@@ -26,6 +27,7 @@ const boardMeta: CalculateMetadataFunction<ReelProps> = async ({ props }) => {
 
 export const RemotionRoot: React.FC = () => (
   <>
+    <Composition id="char-sheet" component={CharSheet} fps={FPS} width={2400} height={1500} durationInFrames={1} />
     {VIDEOS.map((v) => (
       <Composition
         key={v.id}

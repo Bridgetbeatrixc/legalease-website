@@ -11,6 +11,11 @@ export type SceneDef = {
   /** Camera move and look for this scene. Times are fractions of the scene (0..1). */
   camera?: Cam;
   Visual: React.FC<{ dur: number }>;
+  /** Clean, saturated look: no grade, blur, grain or foreground blobs; logo centred. */
+  vivid?: boolean;
+  /** Override wall / floor colours of the backdrop. */
+  wall?: string;
+  floor?: string;
 };
 
 export type VideoDef = {

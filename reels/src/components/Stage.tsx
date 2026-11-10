@@ -6,7 +6,7 @@ import { Defs } from "./Props";
 
 /** A full-frame SVG canvas in scene coordinates (1080×1920). */
 export const Svg: React.FC<{ children: React.ReactNode }> = ({ children }) => (
-  <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} style={{ position: "absolute", inset: 0 }}>
+  <svg viewBox={`0 0 ${W} ${H}`} width={W} height={H} style={{ position: "absolute", inset: 0, overflow: "visible" }}>
     <Defs />
     {children}
   </svg>
@@ -15,12 +15,12 @@ export const Svg: React.FC<{ children: React.ReactNode }> = ({ children }) => (
 export type Setting = "room" | "kitchen" | "store" | "laundry" | "cafe" | "office" | "plain" | "navy";
 
 /** Flat 2D background: wall, floor and a few details per setting. */
-export const Backdrop: React.FC<{ setting: Setting; wall?: string }> = ({ setting, wall }) => {
+export const Backdrop: React.FC<{ setting: Setting; wall?: string; floor?: string; vivid?: boolean }> = ({ setting, wall, floor, vivid }) => {
   const f = useCurrentFrame();
   if (setting === "navy") {
     return (
       <Svg>
-        <rect width={W} height={H} fill={C.navy} />
+        <rect x={-1500} y={-1500} width={W + 3000} height={H + 3000} fill={C.navy} />
         <circle cx={900} cy={420} r={320} fill={C.cobalt} opacity={0.35} />
         <circle cx={120} cy={1500} r={260} fill={C.cobalt} opacity={0.25} />
       </Svg>
@@ -30,10 +30,14 @@ export const Backdrop: React.FC<{ setting: Setting; wall?: string }> = ({ settin
   const floorY = 1300;
   return (
     <Svg>
-      <rect width={W} height={H} fill={wallColor} />
+      <rect x={-1500} y={-1500} width={W + 3000} height={H + 3000} fill={wallColor} />
       {/* soft brand shapes */}
-      <circle cx={940 + wave(f, 200, 10)} cy={420} r={230} fill="#fff" opacity={0.45} />
-      <circle cx={110} cy={760 + wave(f, 180, 10)} r={150} fill="#fff" opacity={0.35} />
+      {vivid ? null : (
+        <>
+          <circle cx={940 + wave(f, 200, 10)} cy={420} r={230} fill="#fff" opacity={0.45} />
+          <circle cx={110} cy={760 + wave(f, 180, 10)} r={150} fill="#fff" opacity={0.35} />
+        </>
+      )}
       {setting === "kitchen" ? (
         <g>
           {Array.from({ length: 6 }).map((_, i) =>
@@ -104,8 +108,8 @@ export const Backdrop: React.FC<{ setting: Setting; wall?: string }> = ({ settin
       ) : null}
       {setting !== "plain" ? (
         <>
-          <rect x={0} y={floorY} width={W} height={H - floorY} fill={C.floor} />
-          <rect x={0} y={floorY} width={W} height={14} fill="rgba(16,31,62,0.08)" />
+          <rect x={-1500} y={floorY} width={W + 3000} height={H - floorY + 1500} fill={floor ?? C.floor} />
+          <rect x={-1500} y={floorY} width={W + 3000} height={14} fill="rgba(16,31,62,0.08)" />
         </>
       ) : null}
     </Svg>
@@ -113,12 +117,13 @@ export const Backdrop: React.FC<{ setting: Setting; wall?: string }> = ({ settin
 };
 
 /** Small logo top-left on every scene. */
-export const Watermark: React.FC<{ dark?: boolean }> = ({ dark }) => (
+export const Watermark: React.FC<{ dark?: boolean; center?: boolean }> = ({ dark, center }) => (
   <div
     style={{
       position: "absolute",
       top: 70,
-      left: 60,
+      left: center ? "50%" : 60,
+      transform: center ? "translateX(-50%)" : undefined,
       padding: "12px 20px",
       borderRadius: 18,
       background: dark ? "#fff" : "rgba(255,255,255,0.85)",
@@ -299,6 +304,21 @@ export type Cam = {
   /** Camera shakes at these moments. */
   shake?: number[];
   grade?: Grade;
+  /** Cuts / moves between framings. at = seconds into the scene; x,y = point
+   *  of the scene put at the centre of the frame; ease = seconds to move there
+   *  (default 0.2 s, a quick whip). Overrides zoom/pan/focus when set. */
+  shots?: { at: number; zoom: number; x: number; y: number; ease?: number }[];
+};
+
+const shotAt = (shots: NonNullable<Cam["shots"]>, frame: number) => {
+  let i = 0;
+  for (let k = 0; k < shots.length; k++) if (frame >= shots[k].at * 30) i = k;
+  const cur = shots[i];
+  const prev = shots[Math.max(0, i - 1)];
+  const len = Math.max(1, (cur.ease ?? 0.2) * 30);
+  const t = i === 0 ? 1 : Easing.inOut(Easing.cubic)(Math.min(1, (frame - cur.at * 30) / len));
+  const m = (a: number, b: number) => a + (b - a) * t;
+  return { zoom: m(prev.zoom, cur.zoom), x: m(prev.x, cur.x), y: m(prev.y, cur.y) };
 };
 
 const GRADES: Record<Grade, { top: string; tint: string; vignette: number }> = {
@@ -310,6 +330,25 @@ const GRADES: Record<Grade, { top: string; tint: string; vignette: number }> = {
 };
 
 export const camAt = (cam: Cam | undefined, frame: number, dur: number) => {
+  if (cam?.shots?.length) {
+    const sh = shotAt(cam.shots, frame);
+    let zoom = sh.zoom;
+    for (const p of cam.punch ?? []) {
+      const d = frame - p * dur;
+      if (d >= 0) zoom += spring({ frame: d, fps: 30, config: { damping: 9, mass: 0.5 } }) * 0.08 * Math.exp(-d / 30);
+    }
+    let sx = 0;
+    let sy = 0;
+    for (const s of cam.shake ?? []) {
+      const d = frame - s * dur;
+      if (d >= 0 && d < 16) {
+        const k = (1 - d / 16) * 20;
+        sx += (random(`sx${s}-${frame}`) - 0.5) * 2 * k;
+        sy += (random(`sy${s}-${frame}`) - 0.5) * 2 * k;
+      }
+    }
+    return { zoom, pan: 540 - sh.x, tilt: 900 - sh.y, sx, sy, focus: [sh.x, sh.y] as [number, number], shots: true };
+  }
   const t = Math.min(1, Math.max(0, frame / Math.max(dur, 1)));
   const e = Easing.inOut(Easing.cubic)(t);
   const z0 = cam?.zoom ?? [1, 1.07];
@@ -330,7 +369,7 @@ export const camAt = (cam: Cam | undefined, frame: number, dur: number) => {
       sy += (random(`sy${s}-${frame}`) - 0.5) * 2 * k;
     }
   }
-  return { zoom, pan, tilt, sx, sy, focus: cam?.focus ?? [540, 1150] };
+  return { zoom, pan, tilt, sx, sy, focus: cam?.focus ?? [540, 1150], shots: false };
 };
 
 /** Out-of-focus shapes in front of the scene, for depth. */

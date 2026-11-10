@@ -20,17 +20,19 @@ export const SceneFrame: React.FC<{ scene: SceneDef; dur: number; first?: boolea
   const grade = scene.camera?.grade ?? (dark ? "night" : "bright");
   return (
     <AbsoluteFill style={{ background: C.cream, overflow: "hidden" }}>
-      <AbsoluteFill style={{ transform: world(0.55), transformOrigin: origin, filter: `blur(${1.2 + blur}px)` }}>
-        <Backdrop setting={scene.setting ?? "room"} />
+      <AbsoluteFill style={{ transform: world(cam.shots ? 0.92 : 0.55), transformOrigin: origin, filter: scene.vivid ? (blur > 0.3 ? `blur(${blur}px)` : undefined) : `blur(${1.2 + blur}px)` }}>
+        <Backdrop setting={scene.setting ?? "room"} wall={scene.wall} floor={scene.floor} vivid={scene.vivid} />
       </AbsoluteFill>
       <AbsoluteFill style={{ transform: world(1), transformOrigin: origin, filter: blur > 0.3 ? `blur(${blur}px)` : undefined }}>
         <Visual dur={dur} />
       </AbsoluteFill>
-      <AbsoluteFill style={{ transform: world(1.6), transformOrigin: origin }}>
-        <Foreground seed={scene.id} dark={dark} />
-      </AbsoluteFill>
-      <Look grade={grade} />
-      <Watermark dark={dark} />
+      {scene.vivid ? null : (
+        <AbsoluteFill style={{ transform: world(1.6), transformOrigin: origin }}>
+          <Foreground seed={scene.id} dark={dark} />
+        </AbsoluteFill>
+      )}
+      {scene.vivid ? null : <Look grade={grade} />}
+      <Watermark dark={dark || scene.vivid} center={scene.vivid} />
       {scene.kicker ? <Kicker {...scene.kicker} dark={dark} /> : null}
       <Caption text={scene.text} dur={dur} dark={dark} />
       {first ? <Letterbox /> : null}
