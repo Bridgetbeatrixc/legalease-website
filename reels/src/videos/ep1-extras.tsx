@@ -8,7 +8,7 @@ const SW = 6;
 
 /** Busy, lived-in kitchen wall: window with moving clouds, bunting, clock,
  *  shelves with jars, hanging utensils, plant. Drawn behind the characters. */
-export const KitchenBG: React.FC<{ hideWindow?: boolean }> = ({ hideWindow }) => {
+export const KitchenBG: React.FC<{ hideWindow?: boolean; jars?: [string, string][] }> = ({ hideWindow, jars }) => {
   const f = useCurrentFrame();
   const flags = ["#E5484D", "#FFC93C", "#2FA36B", "#1A56D6", "#FF8FA3", "#7B61FF"];
   const sec = f / 30;
@@ -65,11 +65,13 @@ export const KitchenBG: React.FC<{ hideWindow?: boolean }> = ({ hideWindow }) =>
       {/* shelf with jars */}
       <g transform="translate(150 700)">
         <rect x={-130} y={0} width={260} height={18} rx={6} fill="#8C5A35" stroke={OL} strokeWidth={5} />
-        {[
-          ["#E5484D", "CABE"],
-          ["#FFC93C", "KUNYIT"],
-          ["#2FA36B", "DAUN"],
-        ].map(([c, l], i) => (
+        {(
+          jars ?? [
+            ["#E5484D", "CABE"],
+            ["#FFC93C", "KUNYIT"],
+            ["#2FA36B", "DAUN"],
+          ]
+        ).map(([c, l], i) => (
           <g key={l} transform={`translate(${-80 + i * 80} 0)`}>
             <rect x={-30} y={-78} width={60} height={78} rx={14} fill={c} stroke={OL} strokeWidth={4} />
             <rect x={-26} y={-92} width={52} height={18} rx={6} fill="#8C5A35" stroke={OL} strokeWidth={4} />

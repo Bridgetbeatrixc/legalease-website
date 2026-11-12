@@ -229,6 +229,7 @@ export type ChibiLook = {
   shoes?: string;
   iris?: string;
   lash?: boolean;
+  hat?: "chef";
 };
 
 export const Chibi: React.FC<
@@ -285,6 +286,7 @@ export const Chibi: React.FC<
   shoes = "#3B2A4A",
   iris,
   lash = true,
+  hat,
 }) => {
   const frame = useCurrentFrame();
   const f = frame + seed * 41;
@@ -467,6 +469,15 @@ export const Chibi: React.FC<
               />
             ) : null}
             {hair === "bob" ? <path d={`M-136 ${headY + 20} Q-140 ${headY - 140} 0 ${headY - 144} Q140 ${headY - 140} 136 ${headY + 20} Q100 ${headY - 70} 0 ${headY - 76} Q-100 ${headY - 70} -136 ${headY + 20} Z`} fill={hairColor} stroke={OL} strokeWidth={OW} /> : null}
+            {hat === "chef" ? (
+              <g>
+                {[-78, 0, 78].map((hx, i) => (
+                  <circle key={hx} cx={hx} cy={headY - 210 - (i === 1 ? 34 : 0)} r={i === 1 ? 72 : 60} fill="#fff" stroke={OL} strokeWidth={OW} />
+                ))}
+                <rect x={-120} y={headY - 196} width={240} height={70} rx={16} fill="#fff" stroke={OL} strokeWidth={OW} />
+                <path d={`M-60 ${headY - 186} L-60 ${headY - 136} M0 ${headY - 186} L0 ${headY - 136} M60 ${headY - 186} L60 ${headY - 136}`} stroke="#DCE4F0" strokeWidth={8} strokeLinecap="round" />
+              </g>
+            ) : null}
             <g transform={`translate(0 ${headY})`}>
               <Face mood={mood} blink={blink} level={level} lx={lx} ly={ly} iris={iris} lash={lash} />
             </g>

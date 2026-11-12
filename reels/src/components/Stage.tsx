@@ -308,15 +308,17 @@ export type Cam = {
    *  of the scene put at the centre of the frame; ease = seconds to move there
    *  (default 0.2 s, a quick whip). Overrides zoom/pan/focus when set. */
   shots?: { at: number; zoom: number; x: number; y: number; ease?: number }[];
+  /** Shot `at` values are fractions of the scene (0..1) instead of seconds. */
+  shotsFrac?: boolean;
 };
 
-const shotAt = (shots: NonNullable<Cam["shots"]>, frame: number) => {
+const shotAt = (shots: NonNullable<Cam["shots"]>, frame: number, unit = 30) => {
   let i = 0;
-  for (let k = 0; k < shots.length; k++) if (frame >= shots[k].at * 30) i = k;
+  for (let k = 0; k < shots.length; k++) if (frame >= shots[k].at * unit) i = k;
   const cur = shots[i];
   const prev = shots[Math.max(0, i - 1)];
   const len = Math.max(1, (cur.ease ?? 0.2) * 30);
-  const t = i === 0 ? 1 : Easing.inOut(Easing.cubic)(Math.min(1, (frame - cur.at * 30) / len));
+  const t = i === 0 ? 1 : Easing.inOut(Easing.cubic)(Math.min(1, (frame - cur.at * unit) / len));
   const m = (a: number, b: number) => a + (b - a) * t;
   return { zoom: m(prev.zoom, cur.zoom), x: m(prev.x, cur.x), y: m(prev.y, cur.y) };
 };
@@ -331,7 +333,7 @@ const GRADES: Record<Grade, { top: string; tint: string; vignette: number }> = {
 
 export const camAt = (cam: Cam | undefined, frame: number, dur: number) => {
   if (cam?.shots?.length) {
-    const sh = shotAt(cam.shots, frame);
+    const sh = shotAt(cam.shots, frame, cam.shotsFrac ? dur : 30);
     let zoom = sh.zoom;
     for (const p of cam.punch ?? []) {
       const d = frame - p * dur;

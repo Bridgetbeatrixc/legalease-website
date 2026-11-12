@@ -72,7 +72,7 @@ const Wok: React.FC<{ toss?: number[] }> = ({ toss = [] }) => {
 };
 
 /** Counter top with a wooden front. Characters drawn before it stand behind it. */
-const Counter: React.FC<{ x: number; w: number; y?: number }> = ({ x, w, y = 1060 }) => (
+export const Counter: React.FC<{ x: number; w: number; y?: number }> = ({ x, w, y = 1060 }) => (
   <g>
     <rect x={x + 10} y={y + 26} width={w - 20} height={1300 - y - 26} fill="#D99A62" stroke={OL} strokeWidth={SW} />
     {[0, 1, 2].map((i) => (
@@ -82,7 +82,7 @@ const Counter: React.FC<{ x: number; w: number; y?: number }> = ({ x, w, y = 106
   </g>
 );
 
-const Sign: React.FC<{ front: string; back?: string; flip?: number; w?: number }> = ({ front, back, flip = 0, w = 560 }) => {
+export const Sign: React.FC<{ front: string; back?: string; flip?: number; w?: number }> = ({ front, back, flip = 0, w = 560 }) => {
   const sx = Math.cos(flip * Math.PI);
   const showBack = sx < 0;
   return (
@@ -101,7 +101,7 @@ const Sign: React.FC<{ front: string; back?: string; flip?: number; w?: number }
 };
 
 /** Cartoon phone (outlined), centred. Children in screen coords 0..w, 0..h. */
-const Hp: React.FC<{ w?: number; h?: number; children?: React.ReactNode }> = ({ w = 460, h = 860, children }) => (
+export const Hp: React.FC<{ w?: number; h?: number; children?: React.ReactNode }> = ({ w = 460, h = 860, children }) => (
   <g>
     <rect x={-w / 2 - 18} y={-h / 2 - 18} width={w + 36} height={h + 36} rx={64} fill="#2D3A6B" stroke={OL} strokeWidth={SW} />
     <g transform={`translate(${-w / 2} ${-h / 2})`}>
@@ -183,7 +183,7 @@ const BankBook: React.FC = () => (
   </g>
 );
 
-const Thought: React.FC<{ t: number; w: number; h: number; tailX?: number; tailY?: number; children?: React.ReactNode }> = ({ t, w, h, tailX = -240, tailY = 340, children }) => {
+export const Thought: React.FC<{ t: number; w: number; h: number; tailX?: number; tailY?: number; children?: React.ReactNode }> = ({ t, w, h, tailX = -240, tailY = 340, children }) => {
   const f = useCurrentFrame();
   const puffs = 12;
   return (
@@ -203,7 +203,7 @@ const Thought: React.FC<{ t: number; w: number; h: number; tailX?: number; tailY
   );
 };
 
-const Burst: React.FC<{ start: number; n?: number; r?: number; colors?: string[]; seed?: string }> = ({ start, n = 14, r = 320, colors = [C.gold, "#1A56D6", "#E5484D", "#2FA36B"], seed = "b" }) => {
+export const Burst: React.FC<{ start: number; n?: number; r?: number; colors?: string[]; seed?: string }> = ({ start, n = 14, r = 320, colors = [C.gold, "#1A56D6", "#E5484D", "#2FA36B"], seed = "b" }) => {
   const f = useCurrentFrame();
   const d = f - start;
   if (d < 0 || d > 40) return null;
@@ -222,7 +222,7 @@ const Burst: React.FC<{ start: number; n?: number; r?: number; colors?: string[]
 };
 
 /** Puff of smoke for magical entrances. */
-const Poof: React.FC<{ start: number }> = ({ start }) => {
+export const Poof: React.FC<{ start: number }> = ({ start }) => {
   const f = useCurrentFrame();
   const d = f - start;
   if (d < 0 || d > 26) return null;
@@ -242,7 +242,7 @@ const Poof: React.FC<{ start: number }> = ({ start }) => {
   );
 };
 
-const Confetti: React.FC<{ start: number }> = ({ start }) => {
+export const Confetti: React.FC<{ start: number }> = ({ start }) => {
   const f = useCurrentFrame();
   const d = f - start;
   if (d < 0) return null;
@@ -257,7 +257,7 @@ const Confetti: React.FC<{ start: number }> = ({ start }) => {
   );
 };
 
-const Stamp: React.FC<{ t: number; ok?: boolean; text?: string }> = ({ t, ok = false, text }) => {
+export const Stamp: React.FC<{ t: number; ok?: boolean; text?: string }> = ({ t, ok = false, text }) => {
   if (t <= 0.01) return null;
   const sc = 2.4 - t * 1.4;
   return (
@@ -277,7 +277,7 @@ const Stamp: React.FC<{ t: number; ok?: boolean; text?: string }> = ({ t, ok = f
 };
 
 /** Comic "impact" lines around a point. */
-const Impact: React.FC<{ start: number; r?: number; color?: string }> = ({ start, r = 200, color = OL }) => {
+export const Impact: React.FC<{ start: number; r?: number; color?: string }> = ({ start, r = 200, color = OL }) => {
   const f = useCurrentFrame();
   const d = f - start;
   if (d < 0 || d > 14) return null;
@@ -295,7 +295,7 @@ const Impact: React.FC<{ start: number; r?: number; color?: string }> = ({ start
 };
 
 /** Dark mood wash over the world (for the turn in the hook). */
-const Wash: React.FC<{ o: number; color?: string }> = ({ o, color = "#1B2350" }) => (o > 0 ? <rect x={-2000} y={-2000} width={5000} height={6000} fill={color} opacity={o} /> : null);
+export const Wash: React.FC<{ o: number; color?: string }> = ({ o, color = "#1B2350" }) => (o > 0 ? <rect x={-2000} y={-2000} width={5000} height={6000} fill={color} opacity={o} /> : null);
 
 // ---------------------------------------------------------------------------
 // Scenes
