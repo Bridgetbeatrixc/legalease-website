@@ -42,7 +42,7 @@ export function Title({ a, b, as = "h2", className = "" }: { a: string; b: strin
     <Tag className={`title ${className}`}>
       {a}
       <br />
-      <span className="accent">{b}</span>
+      <em className="accent">{b}</em>
     </Tag>
   );
 }

@@ -9,6 +9,7 @@ import {
   Pricing,
   Process,
   SelectedWork,
+  Statement,
   Services,
   Team,
   WhyBranding,
@@ -32,6 +33,7 @@ export function HomePage({ lang }: { lang: Lang }) {
       <WorkRail />
       <Services lang={lang} />
       <SelectedWork lang={lang} />
+      <Statement lang={lang} />
       <WhyBranding lang={lang} />
       <Process lang={lang} />
       <Places lang={lang} />
@@ -72,7 +74,7 @@ export function AboutPage({ lang }: { lang: Lang }) {
     <Shell lang={lang} path="/about/">
       <PageHero kicker={t.kicker} a={t.h1a} b={t.h1b} sub={t.sub} tex="silkdark" />
       <section className="section">
-        <div className="wrap story">
+        <div className="wrap story dropcap-story">
           {t.story.map((p, i) => (
             <p key={i} className={i === 0 ? "story-first" : ""}>
               {p}

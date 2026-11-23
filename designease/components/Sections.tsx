@@ -4,30 +4,73 @@ import { Arrow, DmButton, Kicker, Mark, Title } from "./Site";
 
 export function Hero({ lang }: { lang: Lang }) {
   const t = dict[lang].hero;
+  const svc = dict[lang].services.list;
   return (
     <section className="hero tex tex-silk">
       <div className="wrap hero-inner">
-        <Kicker>{t.kicker}</Kicker>
+        <div className="folio folio-top">
+          <span>DesignEase</span>
+          <span>{t.kicker}</span>
+          <span>2026</span>
+        </div>
         <Title as="h1" a={t.h1a} b={t.h1b} className="hero-title" />
-        <div className="hero-foot">
-          <p className="lead">{t.sub}</p>
-          <div className="actions">
-            <DmButton label={t.primary} />
-            <Link className="pill pill-ghost" href={`${base(lang)}/work/`}>
-              <span>{t.secondary}</span>
-              <Arrow />
-            </Link>
+        <div className="hero-cols">
+          <div className="hero-col">
+            <p className="lead">{t.sub}</p>
+            <div className="actions">
+              <DmButton label={t.primary} />
+              <Link className="pill pill-ghost" href={`${base(lang)}/work/`}>
+                <span>{t.secondary}</span>
+                <Arrow />
+              </Link>
+            </div>
+          </div>
+          <ol className="hero-col hero-index">
+            {svc.map((x) => (
+              <li key={x.no}>
+                <span>{x.no}</span>
+                {x.title}
+              </li>
+            ))}
+          </ol>
+          <div className="hero-col hero-cities">
+            {t.cities.map((c) => (
+              <div key={c.city} className="city">
+                <span className="city-name">{c.city}</span>
+                <span className="city-coord">{c.coord}</span>
+              </div>
+            ))}
           </div>
         </div>
-        <div className="hero-cities">
-          {t.cities.map((c) => (
-            <div key={c.city} className="city">
-              <span className="city-dot" />
-              <span className="city-name">{c.city}</span>
-              <span className="city-coord">{c.coord}</span>
-            </div>
-          ))}
-        </div>
+      </div>
+    </section>
+  );
+}
+
+/** Thin running head, like the top of a magazine page. */
+export function Folio({ label }: { label: string; no?: string }) {
+  return (
+    <div className="folio">
+      <span>{label}</span>
+      <span className="folio-rule" />
+      <span>DesignEase</span>
+    </div>
+  );
+}
+
+export function Statement({ lang }: { lang: Lang }) {
+  const t = dict[lang].statement;
+  return (
+    <section className="statement">
+      <div className="statement-img">
+        <img src="/img/photo/swatch-mono.jpg" alt="" loading="lazy" />
+      </div>
+      <div className="statement-text">
+        <Mark size={36} />
+        <p className="statement-quote">
+          {t.a} <em>{t.b}</em>
+        </p>
+        <p className="statement-body">{t.body}</p>
       </div>
     </section>
   );
@@ -62,22 +105,22 @@ export function WorkRail() {
 export function Services({ lang, full = false }: { lang: Lang; full?: boolean }) {
   const t = dict[lang].services;
   return (
-    <section className="section">
+    <section className="section paper">
       <div className="wrap">
+        <Folio label={t.kicker} no="01" />
         <div className="split-head">
-          <div>
-            <Kicker>{t.kicker}</Kicker>
-            <Title a={t.h2a} b={t.h2b} />
-          </div>
-          <p className="lead muted">{t.intro}</p>
+          <Title a={t.h2a} b={t.h2b} />
+          <p className="lead dropcap">{t.intro}</p>
         </div>
-        <div className="svc-list">
+        <div className="toc">
           {t.list.map((s) => (
-            <article key={s.no} className="svc">
-              <span className="svc-no">{s.no}</span>
-              <h3 className="svc-title">{s.title}</h3>
-              <p className="svc-line">{s.line}</p>
-              <ul className="svc-items">
+            <article key={s.no} className="toc-row">
+              <span className="toc-no">{s.no}</span>
+              <div className="toc-main">
+                <h3 className="toc-title">{s.title}</h3>
+                <p className="toc-line">{s.line}</p>
+              </div>
+              <ul className="toc-items">
                 {s.items.map((i) => (
                   <li key={i}>{i}</li>
                 ))}
@@ -122,26 +165,35 @@ function ProjectMeta({ p, lang, index, total }: { p: Project; lang: Lang; index:
 
 export function SelectedWork({ lang }: { lang: Lang }) {
   const t = dict[lang].work;
+  const l = dict[lang].labels;
   const featured = projects.filter((p) => p.featured);
   return (
     <section className="section">
       <div className="wrap">
+        <Folio label={t.kicker} no="02" />
         <div className="split-head">
-          <div>
-            <Kicker>{t.kicker}</Kicker>
-            <Title a={t.h2a} b={t.h2b} />
-          </div>
+          <Title a={t.h2a} b={t.h2b} />
           <Link className="text-link" href={`${base(lang)}/work/`}>
             {t.all} <Arrow />
           </Link>
         </div>
-        <div className="cases">
+        <div className="spreads">
           {featured.map((p, i) => (
-            <article key={p.slug} className={`case ${i % 2 ? "case-flip" : ""}`}>
-              <Link href={`${base(lang)}/work/#${p.slug}`} className="case-img">
+            <article key={p.slug} className={`spread spread-${i}`}>
+              <Link href={`${base(lang)}/work/#${p.slug}`} className="spread-img">
                 <img src={p.cover} alt={`${p.name}: ${p.tag[lang]}`} loading="lazy" />
               </Link>
-              <ProjectMeta p={p} lang={lang} index={i} total={featured.length} />
+              <div className="spread-cap">
+                <span className="spread-no">{String(i + 1).padStart(2, "0")}</span>
+                <div>
+                  <h3>{p.name}</h3>
+                  <p className="spread-tag">
+                    {p.tag[lang]}
+                    {p.status === "progress" && <span className="badge"> · {l.onProgress}</span>}
+                  </p>
+                </div>
+                <p className="spread-sum">{p.summary[lang]}</p>
+              </div>
             </article>
           ))}
         </div>
@@ -179,7 +231,7 @@ export function WhyBranding({ lang }: { lang: Lang }) {
         brand
       </div>
       <div className="wrap">
-        <Kicker>{t.kicker}</Kicker>
+        <Folio label={t.kicker} no="03" />
         <Title a={t.h2a} b={t.h2b} className="on-blue" />
         <div className="why">
           {t.points.map((p) => (
@@ -201,7 +253,7 @@ export function Process({ lang }: { lang: Lang }) {
     <section className="section band-grey">
       <div className="wrap process">
         <div className="process-head">
-          <Kicker>{t.kicker}</Kicker>
+          <Folio label={t.kicker} no="04" />
           <Title a={t.h2a} b={t.h2b} />
         </div>
         <ol className="steps">
@@ -234,11 +286,9 @@ export function Places({ lang }: { lang: Lang }) {
   return (
     <section className="section tex tex-silkdark">
       <div className="wrap">
+        <Folio label={t.kicker} no="05" />
         <div className="split-head">
-          <div>
-            <Kicker>{t.kicker}</Kicker>
-            <Title a={t.h2a} b={t.h2b} />
-          </div>
+          <Title a={t.h2a} b={t.h2b} />
           <p className="lead muted">{t.body}</p>
         </div>
         <div className="ticket">
@@ -280,11 +330,9 @@ export function Pricing({ lang }: { lang: Lang }) {
   return (
     <section className="section" id="pricing">
       <div className="wrap">
+        <Folio label={t.kicker} no="06" />
         <div className="split-head">
-          <div>
-            <Kicker>{t.kicker}</Kicker>
-            <Title a={t.h2a} b={t.h2b} />
-          </div>
+          <Title a={t.h2a} b={t.h2b} />
           <p className="lead muted">{t.intro}</p>
         </div>
         <div className="plans">
@@ -323,20 +371,25 @@ export function Pricing({ lang }: { lang: Lang }) {
 export function Team({ lang }: { lang: Lang }) {
   const t = dict[lang].team;
   return (
-    <section className="section">
+    <section className="section paper">
       <div className="wrap">
-        <div className="center-head">
-          <Kicker>{t.kicker}</Kicker>
+        <Folio label={t.kicker} no="07" />
+        <div className="split-head">
           <Title a={t.h2a} b={t.h2b} />
-          <p className="lead muted">{t.sub}</p>
+          <p className="lead">{t.sub}</p>
         </div>
         <div className="team">
-          {getFounders(lang).map((f) => (
+          {getFounders(lang).map((f, i) => (
             <figure key={f.name} className="founder">
-              <img src={f.img} alt={f.name} loading="lazy" />
+              <div className="founder-img">
+                <img src={f.img} alt={f.name} loading="lazy" />
+              </div>
               <figcaption>
-                <span className="kicker">
-                  {f.role} · {f.city}
+                <span className="founder-meta">
+                  <span>{String(i + 1).padStart(2, "0")}</span>
+                  <span>
+                    {f.role} · {f.city}
+                  </span>
                 </span>
                 <strong>{f.name}</strong>
                 <span>{f.focus}</span>

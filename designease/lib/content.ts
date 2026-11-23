@@ -117,6 +117,11 @@ const en = {
     all: "All work",
     note: "Some pieces were made by our founders in-house at Kasheer and Rintisan. Identity concepts are self-initiated studies with fictional brand names.",
   },
+  statement: {
+    a: "Made by people,",
+    b: "not templates.",
+    body: "AI helps us move faster. Every decision about your brand is still made by a person who looked at your business first.",
+  },
   why: {
     kicker: "Branding 101",
     h2a: "It was never",
@@ -293,6 +298,11 @@ const id: Dict = {
     h2b: "bukan janji.",
     all: "Semua karya",
     note: "Sebagian karya dibuat founder kami secara in-house di Kasheer dan Rintisan. Konsep identitas adalah studi mandiri dengan nama brand fiktif.",
+  },
+  statement: {
+    a: "Dibuat manusia,",
+    b: "bukan template.",
+    body: "AI bantu kami kerja lebih cepat. Tapi setiap keputusan soal brand-mu tetap diambil orang yang sudah mempelajari bisnismu dulu.",
   },
   why: {
     kicker: "Branding 101",
@@ -473,7 +483,7 @@ export const projects: Project[] = [
     },
     services: { en: ["Logo", "Colour & type", "9-post feed"], id: ["Logo", "Warna & font", "Feed 9 post"] },
     featured: true,
-    cover: "/img/work/identity-trio.jpg",
+    cover: "/img/work/identity-grid.jpg",
     gallery: ["/img/work/tg-logo.jpg", "/img/work/tg1.jpg", "/img/work/kc-logo.jpg", "/img/work/kc1.jpg", "/img/work/lm-logo.jpg", "/img/work/lm1.jpg"],
   },
   {
