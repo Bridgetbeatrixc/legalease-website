@@ -64,6 +64,36 @@ const founders = (lang: Lang): Founder[] => [
 ];
 
 const en = {
+  home: {
+    heroLines: ["Look as good", "as the work", "you do."],
+    heroSmall: "For growing businesses in Surabaya and Singapore",
+    heroSub: "Brand identity, social media and websites, made by a small studio that looks at your business before it opens Figma.",
+    marquee: ["Brand identity", "Social media", "Websites", "Surabaya", "Singapore", "F&B", "Laundry", "Training & consulting", "Retail", "Cake shops", "Legal services"],
+    bigA: "Templates look the same.",
+    bigB: "Your brand shouldn't.",
+    bigSub: "We start from your customers, your market and your story, then design. No stock templates, no AI slop.",
+    svcA: "Identity, social, web.",
+    svcB: "We've got you covered.",
+    crumbA: "main",
+    crumbB: "about us",
+    aboutWord: "about us",
+    based: "Based in Surabaya & Singapore, working with brands anywhere",
+    aboutBig: "We are a small studio of designers and developers who help businesses look as good as they are.",
+    aboutP1: "Most owners we meet have great products and a quiet, messy Instagram. Not because they don't care. Their time goes into running the business.",
+    aboutP2: "So we take that part off their hands: the logo, the feed and the website, all saying the same thing.",
+    stats: [
+      { n: "3", l: "co-founders" },
+      { n: "2", l: "countries" },
+      { n: "3", l: "languages" },
+    ],
+    processLabel: "process.",
+    workA: "This is what",
+    workB: "a better brand looks like.",
+    offerLines: ["Special offer", "for new", "brands"],
+    offerSub: "Selected brands get 2 weeks of social media, free: 10 feed designs, 5 stories and captions. Like it? We continue. Not a fit? No worries.",
+    offerCta: "I want this",
+    contactUs: "Contact us",
+  },
   nav: { work: "Work", services: "Services", about: "About", contact: "Contact", dm: "DM us" },
   langSwitch: { label: "Bahasa", href: "/id" },
   meta: {
@@ -246,6 +276,36 @@ const en = {
 export type Dict = typeof en;
 
 const id: Dict = {
+  home: {
+    heroLines: ["Tampil sebagus", "kualitas", "bisnismu."],
+    heroSmall: "Untuk bisnis yang bertumbuh di Surabaya dan Singapura",
+    heroSub: "Identitas brand, sosial media, dan website, dari studio kecil yang mempelajari bisnismu dulu sebelum buka Figma.",
+    marquee: ["Identitas brand", "Sosial media", "Website", "Surabaya", "Singapura", "F&B", "Laundry", "Pelatihan & konsultasi", "Retail", "Toko kue", "Jasa legal"],
+    bigA: "Template kelihatan sama semua.",
+    bigB: "Brand-mu jangan.",
+    bigSub: "Kami mulai dari pelangganmu, pasarmu, dan ceritamu, baru desain. Tanpa template, tanpa AI slop.",
+    svcA: "Identitas, sosmed, web.",
+    svcB: "Semua kami bantu.",
+    crumbA: "beranda",
+    crumbB: "tentang kami",
+    aboutWord: "tentang",
+    based: "Berbasis di Surabaya & Singapura, kerja bareng brand dari mana saja",
+    aboutBig: "Kami studio kecil berisi desainer dan developer yang bantu bisnis tampil sebagus aslinya.",
+    aboutP1: "Kebanyakan pemilik bisnis yang kami temui punya produk bagus, tapi Instagram-nya sepi dan berantakan. Bukan karena nggak peduli. Waktunya habis buat ngurus bisnis.",
+    aboutP2: "Jadi bagian itu kami yang pegang: logo, feed, dan website yang ngomong hal yang sama.",
+    stats: [
+      { n: "3", l: "co-founder" },
+      { n: "2", l: "negara" },
+      { n: "3", l: "bahasa" },
+    ],
+    processLabel: "proses.",
+    workA: "Begini rupanya",
+    workB: "brand yang lebih baik.",
+    offerLines: ["Penawaran", "khusus", "brand baru"],
+    offerSub: "Brand terpilih dapat 2 minggu sosial media gratis: 10 desain feed, 5 story, dan caption. Cocok? Lanjut. Nggak cocok? Santai aja.",
+    offerCta: "Saya mau",
+    contactUs: "Hubungi kami",
+  },
   nav: { work: "Karya", services: "Layanan", about: "Tentang", contact: "Kontak", dm: "DM kami" },
   langSwitch: { label: "English", href: "/" },
   meta: {
@@ -437,6 +497,8 @@ export type Project = {
   summary: { en: string; id: string };
   services: { en: string[]; id: string[] };
   status?: "progress";
+  big?: { en: string; id: string };
+  bigNote?: { en: string; id: string };
   featured?: boolean;
   cover: string;
   coverFit?: "cover" | "contain";
@@ -456,6 +518,8 @@ export const projects: Project[] = [
     services: { en: ["Logo & colourways", "Website", "IG story teaser"], id: ["Logo & colourway", "Website", "Teaser IG story"] },
     status: "progress",
     featured: true,
+    big: { en: "Logo + web", id: "Logo + web" },
+    bigNote: { en: "on progress", id: "sedang dikerjakan" },
     cover: "/img/work/sjk-desk.jpg",
     gallery: ["/img/work/sjk-desk.jpg", "/img/work/sjk-story.jpg"],
     galleryShape: "landscape",
@@ -470,6 +534,8 @@ export const projects: Project[] = [
     },
     services: { en: ["Feed redesign", "Carousels", "Webinar posts", "Reels"], id: ["Redesain feed", "Carousel", "Poster webinar", "Reels"] },
     featured: true,
+    big: { en: "50K", id: "50K" },
+    bigNote: { en: "followers, new feed", id: "followers, feed baru" },
     cover: "/img/work/jp-ba.jpg",
     gallery: ["/img/work/jp-ba.jpg", "/img/work/jp-slide1.jpg", "/img/work/jp-feed.jpg"],
   },
@@ -483,6 +549,8 @@ export const projects: Project[] = [
     },
     services: { en: ["Logo", "Colour & type", "9-post feed"], id: ["Logo", "Warna & font", "Feed 9 post"] },
     featured: true,
+    big: { en: "3", id: "3" },
+    bigNote: { en: "identities, each with a feed", id: "identitas, lengkap dengan feed" },
     cover: "/img/work/identity-grid.jpg",
     gallery: ["/img/work/tg-logo.jpg", "/img/work/tg1.jpg", "/img/work/kc-logo.jpg", "/img/work/kc1.jpg", "/img/work/lm-logo.jpg", "/img/work/lm1.jpg"],
   },
@@ -496,6 +564,8 @@ export const projects: Project[] = [
     },
     services: { en: ["Website", "Copy in 3 languages"], id: ["Website", "Copy 3 bahasa"] },
     featured: true,
+    big: { en: "3", id: "3" },
+    bigNote: { en: "languages, one site", id: "bahasa, satu website" },
     cover: "/img/work/le-desk.jpg",
     gallery: ["/img/work/le-desk.jpg", "/img/work/le-phone.jpg"],
     galleryShape: "landscape",

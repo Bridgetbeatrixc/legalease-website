@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { dict } from "@/lib/content";
 import "@/app/globals.css";
+import "@/app/home.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.SITE_URL ?? "https://designease.pages.dev"),

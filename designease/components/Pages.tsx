@@ -1,4 +1,5 @@
 import { DM_URL, dict, type Lang } from "@/lib/content";
+import { AboutGiant, BentoPricing, BigStatement, FannedServices, HeroV3, Marquee, Offer, ProcessPath, ResultCards } from "./Editorial";
 import { Footer, Header, Kicker, Arrow } from "./Site";
 import {
   AllWork,
@@ -29,16 +30,15 @@ function Shell({ lang, path, children }: { lang: Lang; path: string; children: R
 export function HomePage({ lang }: { lang: Lang }) {
   return (
     <Shell lang={lang} path="/">
-      <Hero lang={lang} />
-      <WorkRail />
-      <Services lang={lang} />
-      <SelectedWork lang={lang} />
-      <Statement lang={lang} />
-      <WhyBranding lang={lang} />
-      <Process lang={lang} />
-      <Places lang={lang} />
-      <Pricing lang={lang} />
-      <Team lang={lang} />
+      <HeroV3 lang={lang} />
+      <Marquee lang={lang} />
+      <BigStatement lang={lang} />
+      <FannedServices lang={lang} />
+      <AboutGiant lang={lang} />
+      <ProcessPath lang={lang} />
+      <ResultCards lang={lang} />
+      <BentoPricing lang={lang} />
+      <Offer lang={lang} />
       <ClosingCta lang={lang} />
     </Shell>
   );
