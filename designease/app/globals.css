@@ -81,7 +81,7 @@ ul, ol { padding: 0; list-style: none; }
 .pill:hover { transform: translateY(-1px); }
 .pill-solid { background: #fff; color: #05070d; }
 .pill-solid:hover { background: var(--accent-soft); }
-.pill-ghost { border: 1px solid var(--line-2); color: #fff; background: rgba(255,255,255,0.04); backdrop-filter: blur(6px); }
+.pill-ghost { border: 1px solid var(--line-2); color: #fff; background: rgba(255,255,255,0.04); }
 .pill-ghost:hover { border-color: #fff; }
 .pill-small { height: 38px; padding: 0 18px; font-size: 14px; background: #fff; color: #05070d; }
 .text-link { display: inline-flex; align-items: center; gap: 8px; margin-top: 48px; color: var(--accent); font-weight: 500; border-bottom: 1px solid transparent; }
@@ -106,7 +106,7 @@ ul, ol { padding: 0; list-style: none; }
 }
 
 /* ---------- Header ---------- */
-.header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(5,7,13,0.55); backdrop-filter: blur(14px) saturate(140%); border-bottom: 1px solid var(--line); }
+.header { position: fixed; top: 0; left: 0; right: 0; z-index: 50; background: rgba(5,7,13,0.9); border-bottom: 1px solid var(--line); }
 .header-row { display: flex; align-items: center; height: 68px; gap: 24px; }
 .logo { display: inline-flex; align-items: center; gap: 9px; font-weight: 500; font-size: 18px; letter-spacing: -0.02em; }
 .nav { display: flex; gap: 30px; margin-left: auto; font-size: 15px; color: var(--muted); }
@@ -138,7 +138,7 @@ ul, ol { padding: 0; list-style: none; }
 
 /* ---------- Work rail ---------- */
 .rail { overflow: hidden; border-bottom: 1px solid var(--line); padding: 28px 0; background: var(--bg); }
-.rail-track { display: flex; gap: 16px; width: max-content; animation: rail 70s linear infinite; }
+.rail-track { display: flex; gap: 16px; width: max-content; animation: rail 70s linear infinite; will-change: transform; }
 .rail img { height: clamp(200px, 22vw, 300px); width: auto; aspect-ratio: 4 / 5; object-fit: cover; border-radius: 8px; }
 @keyframes rail { to { transform: translateX(-50%); } }
 @media (prefers-reduced-motion: reduce) { .rail-track { animation: none; } html { scroll-behavior: auto; } }

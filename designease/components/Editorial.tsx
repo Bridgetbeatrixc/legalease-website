@@ -3,7 +3,7 @@
 // word with floating photos, curvy process path, result cards, bento pricing,
 // staggered offer). Colours, type and logo stay DesignEase.
 import Link from "next/link";
-import { DM_URL, base, dict, getFounders, projects, type Lang } from "@/lib/content";
+import { DM_URL, base, dict, projects, type Lang } from "@/lib/content";
 import { Arrow } from "./Site";
 
 function CircleArrow() {
@@ -35,24 +35,9 @@ export function PillLink({ href, label, external = false, light = false }: { hre
   );
 }
 
-/** The DesignEase D, filled with a real glossy photo texture, as the hero "object". */
-function GlossyMark({ id = "g" }: { id?: string }) {
-  return (
-    <svg className="gmark" viewBox="0 0 100 100" aria-hidden="true">
-      <defs>
-        <pattern id={`${id}-tex`} patternUnits="userSpaceOnUse" width="100" height="100">
-          <image href="/img/tex/glossy.jpg" x="-20" y="-10" width="140" height="210" preserveAspectRatio="xMidYMid slice" />
-        </pattern>
-        <linearGradient id={`${id}-edge`} x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0" stopColor="#ffffff" stopOpacity="0.9" />
-          <stop offset="0.45" stopColor="#7fa2ff" stopOpacity="0.15" />
-          <stop offset="1" stopColor="#ffffff" stopOpacity="0.6" />
-        </linearGradient>
-      </defs>
-      <path d="M22 32 V84 H50 A34 34 0 0 0 50 16 H38" fill="none" stroke={`url(#${id}-tex)`} strokeWidth="13" />
-      <path d="M22 32 V84 H50 A34 34 0 0 0 50 16 H38" fill="none" stroke={`url(#${id}-edge)`} strokeWidth="13" opacity="0.55" style={{ mixBlendMode: "screen" }} />
-    </svg>
-  );
+/** The DesignEase D with a real glossy texture, pre-rendered to an image so it costs nothing to animate. */
+function GlossyMark({ small = false }: { id?: string; small?: boolean }) {
+  return <img className="gmark" src={small ? "/img/d-glossy-sm.webp" : "/img/d-glossy.webp"} alt="" decoding="async" />;
 }
 
 export function HeroV3({ lang }: { lang: Lang }) {
@@ -62,7 +47,7 @@ export function HeroV3({ lang }: { lang: Lang }) {
       <div className="h3-glow" aria-hidden="true" />
       <div className="wrap h3-inner">
         <div className="h3-object" aria-hidden="true">
-          <GlossyMark id="hero" />
+          <GlossyMark />
         </div>
         <h1 className="h3-title">
           {t.heroLines.map((l, i) => (
@@ -160,7 +145,7 @@ export function FannedServices({ lang }: { lang: Lang }) {
               </div>
               {i === list.length - 1 && (
                 <div className="fan-object" aria-hidden="true">
-                  <GlossyMark id="fan" />
+                  <GlossyMark small />
                 </div>
               )}
             </article>
@@ -173,7 +158,6 @@ export function FannedServices({ lang }: { lang: Lang }) {
 
 export function AboutGiant({ lang }: { lang: Lang }) {
   const t = dict[lang].home;
-  const f = getFounders(lang);
   return (
     <section className="ag">
       <div className="wrap">
@@ -181,11 +165,11 @@ export function AboutGiant({ lang }: { lang: Lang }) {
           {t.crumbA} / <em>{t.crumbB}</em>
         </p>
         <div className="ag-stage">
-          <img className="ag-photo ag-p1" src={f[0].img} alt={f[0].name} loading="lazy" />
+          <img className="ag-photo ag-p1" src="/img/work/tg1.jpg" alt="" loading="lazy" />
           <img className="ag-photo ag-p2" src="/img/work/sjk-story.jpg" alt="" loading="lazy" />
-          <img className="ag-photo ag-p3" src={f[2].img} alt={f[2].name} loading="lazy" />
+          <img className="ag-photo ag-p3" src="/img/work/kc-logo.jpg" alt="" loading="lazy" />
           <img className="ag-photo ag-p4" src="/img/work/pj-slide1.jpg" alt="" loading="lazy" />
-          <img className="ag-photo ag-p5" src={f[1].img} alt={f[1].name} loading="lazy" />
+          <img className="ag-photo ag-p5" src="/img/work/lm1.jpg" alt="" loading="lazy" />
           <h2 className="ag-word">{t.aboutWord}</h2>
         </div>
         <div className="ag-based">
@@ -315,7 +299,7 @@ export function BentoPricing({ lang }: { lang: Lang }) {
           <div className="bento-card b3" aria-hidden="true">
             <img src="/img/tex/silk.jpg" alt="" />
             <div className="bento-object">
-              <GlossyMark id="bento" />
+              <GlossyMark small />
             </div>
           </div>
         </div>
@@ -329,7 +313,7 @@ export function Offer({ lang }: { lang: Lang }) {
   return (
     <section className="offer">
       <div className="offer-object" aria-hidden="true">
-        <GlossyMark id="offer" />
+        <GlossyMark small />
       </div>
       <div className="wrap offer-inner">
         <h2 className="offer-title">
